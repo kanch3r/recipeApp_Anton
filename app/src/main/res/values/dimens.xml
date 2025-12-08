@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
     <dimen name="layout_marginHorizontal">16dp</dimen>
-    <dimen name="layout_marginVertical">55dp</dimen>
-    <dimen name="layout_marginStart">2dp</dimen>
-    <dimen name="layout_marginEnd">2dp</dimen>
+    <dimen name="layout_marginVertical">8dp</dimen>
+    <dimen name="layout_marginGap">2dp</dimen>
     <dimen name="textSize">14sp</dimen>
     <dimen name="cornerRadius">8dp</dimen>
 </resources>
