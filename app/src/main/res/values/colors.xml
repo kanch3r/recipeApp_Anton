@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="categoryButtonColor">#FFFFFF</color>
-    <color name="backgroundColorMain">#F4FAFF</color>
+    <color name="black_color">#FF000000</color>
+    <color name="white_color">#FFFFFFFF</color>
+    <color name="button_text_color">#FFFFFF</color>
+    <color name="category_button_background_color">#525DC0</color>
+    <color name="favorite_button_background_color">#E13E3E</color>
+    <color name="main_background_color">#F4FAFF</color>
 </resources>

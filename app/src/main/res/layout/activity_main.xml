@@ -4,96 +4,43 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColorMain">
+    android:background="@color/main_background_color">
 
     <LinearLayout
-        android:id="@+id/frameLayout2"
         android:layout_width="match_parent"
-        android:layout_height="47dp"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/layout_marginHorizontal"
+        android:layout_marginVertical="@dimen/layout_marginVertical"
+        android:background="@color/main_background_color"
+        android:gravity="center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+        <Button
+            android:id="@+id/btnCategory"
+            style="@style/StyleNavButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/layout_marginEnd"
             android:layout_weight="1"
-            android:background="@color/backgroundColorMain"
-            android:src="@drawable/ic_back">
+            android:backgroundTint="@color/category_button_background_color"
+            android:text="@string/title_category" />
 
-        </ImageButton>
 
-        <ImageButton
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btnFavorite"
+            style="@style/StyleNavButton"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/layout_marginStart"
             android:layout_weight="1"
-            android:background="@color/backgroundColorMain"
-            android:src="@drawable/ic_home">
-
-        </ImageButton>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/backgroundColorMain"
-            android:src="@drawable/ic_recents">
-
-        </ImageButton>
+            android:backgroundTint="@color/favorite_button_background_color"
+            android:text="@string/title_favorites"
+            app:icon="@drawable/ic_heart_empty"
+            app:iconGravity="end" />
 
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:background="@color/backgroundColorMain"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:background="@color/backgroundColorMain">
-
-            <android.widget.Button
-                android:id="@+id/kuku"
-                style="@style/StyleTitle14"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="2dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_rounded_category_btn"
-                android:text="@string/button_category">
-
-            </android.widget.Button>
-
-            <android.widget.Button
-                style="@style/StyleTitle14"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_rounded_favorite_btn"
-                android:drawableEnd="@drawable/ic_heart_empty"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@string/button_favorite">
-
-            </android.widget.Button>
-
-        </LinearLayout>
-
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
