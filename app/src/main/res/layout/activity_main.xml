@@ -9,8 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/layout_marginHorizontal"
-        android:layout_marginVertical="@dimen/layout_marginVertical"
+        android:layout_marginHorizontal="@dimen/layout_margin_horizontal"
+        android:layout_marginVertical="@dimen/layout_margin_vertical"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,7 +22,7 @@
             style="@style/StyleNavButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/layout_marginGap"
+            android:layout_marginEnd="@dimen/layout_margin_gap"
             android:layout_weight="1"
             android:backgroundTint="@color/category_button_background_color"
             android:text="@string/title_category" />
@@ -32,7 +32,7 @@
             style="@style/StyleNavButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/layout_marginGap"
+            android:layout_marginStart="@dimen/layout_margin_gap"
             android:layout_weight="1"
             android:backgroundTint="@color/favorite_button_background_color"
             android:text="@string/title_favorites"
