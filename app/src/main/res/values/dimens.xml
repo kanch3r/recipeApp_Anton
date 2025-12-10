@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="layout_margin_horizontal">16dp</dimen>
+    <dimen name="layout_margin_vertical">8dp</dimen>
+    <dimen name="layout_margin_gap">2dp</dimen>
+    <dimen name="navigation_buttons_text_size">14sp</dimen>
+    <dimen name="corner_radius">8dp</dimen>
+</resources>

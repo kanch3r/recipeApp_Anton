@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">recipeApp_Anton</string>
+    <string name="title_category">категории</string>
+    <string name="title_favorites">избранное</string>
 </resources>
