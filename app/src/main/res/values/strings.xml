@@ -2,4 +2,6 @@
     <string name="app_name">recipeApp_Anton</string>
     <string name="title_category">категории</string>
     <string name="title_favorites">избранное</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
