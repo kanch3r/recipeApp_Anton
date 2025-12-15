@@ -1,24 +1,24 @@
 package com.example.recipeapp_anton
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.recipeapp_anton.databinding.FragmentListCategoriesBinding
+import androidx.fragment.app.Fragment
+import com.example.recipeapp_anton.databinding.FragmentFavoritesBinding
 
-class CategoriesListFragment : Fragment() {
-    private var _binding: FragmentListCategoriesBinding? = null
+class FavoritesFragment : Fragment() {
+    private var _binding: FragmentFavoritesBinding? = null
     private val binding
         get() = _binding
-            ?: throw IllegalStateException("Binding for FragmentListCategoriesBinding in null")
+            ?: throw IllegalStateException("Binding for FragmentFavoritesBinding in null")
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentListCategoriesBinding
+        _binding = FragmentFavoritesBinding
             .inflate(inflater, container, false)
         return binding.root
     }
