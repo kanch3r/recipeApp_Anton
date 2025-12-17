@@ -2,5 +2,6 @@
     <string name="app_name">recipeApp_Anton</string>
     <string name="title_category">категории</string>
     <string name="title_favorites">избранное</string>
-    <string name="category_image_desc">обложка списка категории</string>
+    <string name="category_image_list_desc">обложка списка категории</string>
+    <string name="category_image_desc">обложка категории</string>
 </resources>

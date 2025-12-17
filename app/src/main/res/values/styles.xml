@@ -20,5 +20,18 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="StyleCardViewTitle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/cardview_title_text_size</item>
+        <item name="android:textColor">@color/title_text_color</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="StyleCardViewDescription" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/cardview_description_text_size</item>
+        <item name="android:textColor">@color/description_text_color</item>
+        <item name="android:fontFamily">@font/montserrat_medium</item>
+    </style>
+
 
 </resources>
