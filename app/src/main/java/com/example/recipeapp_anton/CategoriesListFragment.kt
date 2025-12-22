@@ -5,11 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.example.recipeapp_anton.databinding.FragmentListCategoriesBinding
 
 class CategoriesListFragment : Fragment() {
+
     private var _binding: FragmentListCategoriesBinding? = null
+
     private val binding
         get() = _binding
             ?: throw IllegalStateException("Binding for FragmentListCategoriesBinding in null")
@@ -37,5 +40,18 @@ class CategoriesListFragment : Fragment() {
     private fun initRecycler() {
         val categoriesListAdapter = CategoriesListAdapter(STUB.getCategories())
         binding.rvCategories.adapter = categoriesListAdapter
+        categoriesListAdapter.setOnItemClickListener(object :
+            CategoriesListAdapter.OnItemClickListener {
+            override fun onItemClick() {
+                openRecipesByCategoryId()
+            }
+        })
+    }
+
+    fun openRecipesByCategoryId() {
+        parentFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace<RecipesListFragment>(R.id.mainContainer)
+        }
     }
 }
