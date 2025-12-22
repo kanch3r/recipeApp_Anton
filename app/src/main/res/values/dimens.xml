@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="layout_margin_horizontal">16dp</dimen>
-    <dimen name="layout_margin_vertical">8dp</dimen>
     <dimen name="layout_height_image">130dp</dimen>
     <dimen name="layout_margin_gap">2dp</dimen>
     <dimen name="layout_height_constraintlayout">224dp</dimen>
-    <dimen name="corner_radius">8dp</dimen>
-    <dimen name="padding_text_view">8dp</dimen>
     <dimen name="padding_text_view_image">10dp</dimen>
-    <dimen name="layout_margin_cardview">8dp</dimen>
-    <dimen name="layout_margin_textview_image">16dp</dimen>
-    <dimen name="layout_margin_recyclerview">8dp</dimen>
-    <dimen name="navigation_buttons_text_size">14sp</dimen>
-    <dimen name="title_view_text_size">20sp</dimen>
-    <dimen name="cardview_title_text_size">14sp</dimen>
-    <dimen name="cardview_description_text_size">14sp</dimen>
+    <dimen name="layout_medium_size">16dp</dimen>
+    <dimen name="layout_normal_size">8dp</dimen>
+    <dimen name="large_text_size">20sp</dimen>
+    <dimen name="medium_text_size">14sp</dimen>
+    <dimen name="small_text_size">12sp</dimen>
 </resources>

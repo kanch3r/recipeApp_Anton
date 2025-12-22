@@ -2,7 +2,7 @@
 <resources>
 
     <style name="StyleTitle14" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/navigation_buttons_text_size</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
         <item name="android:textColor">@color/button_text_color</item>
         <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
         <item name="android:textAllCaps">true</item>
@@ -10,25 +10,25 @@
 
     <style name="StyleNavButton" parent="Widget.Material3.Button">
         <item name="android:textAppearance">@style/StyleTitle14</item>
-        <item name="cornerRadius">@dimen/corner_radius</item>
+        <item name="cornerRadius">@dimen/layout_normal_size</item>
     </style>
 
     <style name="StyleTitleView" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/title_view_text_size</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:textColor">@color/title_text_color</item>
         <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="StyleCardViewTitle" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/cardview_title_text_size</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
         <item name="android:textColor">@color/title_text_color</item>
         <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="StyleCardViewDescription" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/cardview_description_text_size</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
         <item name="android:textColor">@color/description_text_color</item>
         <item name="android:fontFamily">@font/montserrat_medium</item>
     </style>
