@@ -4,4 +4,6 @@
     <string name="title_favorites">избранное</string>
     <string name="category_image_list_desc">обложка списка категории</string>
     <string name="category_image_desc">обложка категории</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
