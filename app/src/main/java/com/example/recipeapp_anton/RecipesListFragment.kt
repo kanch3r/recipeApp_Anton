@@ -1,6 +1,7 @@
 package com.example.recipeapp_anton
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,10 @@ import com.example.recipeapp_anton.databinding.FragmentListRecipesBinding
 
 class RecipesListFragment : Fragment() {
     private var _binding: FragmentListRecipesBinding? = null
+
+    private var categoryId: Int? = null
+    private var categoryName: String? = null
+    private var categoryImageUrl: String? = null
 
     private val binding
         get() = _binding
@@ -21,6 +26,20 @@ class RecipesListFragment : Fragment() {
     ): View {
         _binding = FragmentListRecipesBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        categoryId = requireArguments().getInt("ARG_CATEGORY_ID", 0)
+        categoryName = requireArguments().getString("ARG_CATEGORY_NAME")
+        categoryImageUrl = requireArguments().getString("ARG_CATEGORY_IMAGE_URL")
+
+        Log.i(
+            "Результат передачи",
+            "Открываем рецепты категории: ${categoryName ?: "Неизвестная"}"
+        )
+
     }
 
     override fun onDestroyView() {

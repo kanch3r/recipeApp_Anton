@@ -17,11 +17,11 @@ class CategoriesListAdapter(val dataSet: List<Category>) :
     var itemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
-        fun onItemClick()
+        fun onItemClick(category: Category)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
-        val itemClickListener = listener
+        this.itemClickListener = listener
     }
 
     class ViewHolder(binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -56,7 +56,7 @@ class CategoriesListAdapter(val dataSet: List<Category>) :
         viewHolder.imageView.setImageDrawable(drawable)
 
         viewHolder.cardView.setOnClickListener {
-            itemClickListener?.onItemClick()
+            itemClickListener?.onItemClick(category)
         }
     }
 
