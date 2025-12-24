@@ -17,7 +17,7 @@ class CategoriesListAdapter(val dataSet: List<Category>) :
     var itemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
-        fun onItemClick(category: Category)
+        fun onItemClick(categoryId: Int)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
@@ -56,7 +56,8 @@ class CategoriesListAdapter(val dataSet: List<Category>) :
         viewHolder.imageView.setImageDrawable(drawable)
 
         viewHolder.cardView.setOnClickListener {
-            itemClickListener?.onItemClick(category)
+            itemClickListener?.onItemClick(category.id)
+            Log.i("Регистрация клика", "Произошло нажатие на категорию: ${category.id}")
         }
     }
 
