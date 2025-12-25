@@ -51,12 +51,12 @@ class CategoriesListFragment : Fragment() {
         })
     }
 
-    fun openRecipesByCategoryId(categoryId: Int) {
-        val category = STUB.getCategories().find { it.id == categoryId }
+    private fun openRecipesByCategoryId(categoryId: Int) {
+        val category = STUB.getCategories().find { it.id == categoryId } ?: return
         val bundle = bundleOf(
-            Constants.Bundle.ARG_CATEGORY_ID to category?.id,
-            Constants.Bundle.ARG_CATEGORY_NAME to category?.title,
-            Constants.Bundle.ARG_CATEGORY_IMAGE_URL to category?.imageUrl
+            Constants.Bundle.ARG_CATEGORY_ID to category.id,
+            Constants.Bundle.ARG_CATEGORY_NAME to category.title,
+            Constants.Bundle.ARG_CATEGORY_IMAGE_URL to category.imageUrl
         )
         parentFragmentManager.commit {
             setReorderingAllowed(true)

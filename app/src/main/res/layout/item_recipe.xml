@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cvCategoryElement"
+    android:id="@+id/cvRecipeElement"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/layout_normal_size"
@@ -19,27 +19,19 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/ivCategoryCard"
+            android:id="@+id/ivRecipeCard"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_height_image"
             android:contentDescription="@string/category_image_desc"
             android:scaleType="centerCrop" />
 
         <TextView
-            android:id="@+id/tvTitleCategoryCard"
+            android:id="@+id/tvTitleRecipeCard"
             style="@style/StyleCardViewTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/layout_normal_size"
             tools:text="заголовок" />
-
-        <TextView
-            android:id="@+id/tvDescriptionCategoryCard"
-            style="@style/StyleCardViewDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/layout_normal_size"
-            tools:text="описание" />
 
     </LinearLayout>
 
