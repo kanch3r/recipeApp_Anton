@@ -1,10 +1,12 @@
 package com.example.recipeapp_anton
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.recipeapp_anton.databinding.FragmentListCategoriesBinding
@@ -42,16 +44,23 @@ class CategoriesListFragment : Fragment() {
         binding.rvCategories.adapter = categoriesListAdapter
         categoriesListAdapter.setOnItemClickListener(object :
             CategoriesListAdapter.OnItemClickListener {
-            override fun onItemClick() {
-                openRecipesByCategoryId()
+            override fun onItemClick(categoryId: Int) {
+                openRecipesByCategoryId(categoryId)
+                Log.i("Выбор категории", "Пользователь выбрал: $categoryId")
             }
         })
     }
 
-    fun openRecipesByCategoryId() {
+    fun openRecipesByCategoryId(categoryId: Int) {
+        val category = STUB.getCategories().find { it.id == categoryId }
+        val bundle = bundleOf(
+            Constants.Bundle.ARG_CATEGORY_ID to category?.id,
+            Constants.Bundle.ARG_CATEGORY_NAME to category?.title,
+            Constants.Bundle.ARG_CATEGORY_IMAGE_URL to category?.imageUrl
+        )
         parentFragmentManager.commit {
             setReorderingAllowed(true)
-            replace<RecipesListFragment>(R.id.mainContainer)
+            replace<RecipesListFragment>(R.id.mainContainer, args = bundle)
         }
     }
 }
