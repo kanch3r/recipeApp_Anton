@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import com.example.recipeapp_anton.databinding.FragmentListRecipesBinding
 
 class RecipesListFragment : Fragment() {
@@ -35,11 +37,12 @@ class RecipesListFragment : Fragment() {
         categoryName = requireArguments().getString(Constants.Bundle.ARG_CATEGORY_NAME)
         categoryImageUrl = requireArguments().getString(Constants.Bundle.ARG_CATEGORY_IMAGE_URL)
 
+        initRecycler(categoryId)
+
         Log.i(
             "Результат передачи",
             "Открываем рецепты категории: ${categoryName ?: "Неизвестная"}"
         )
-
     }
 
     override fun onDestroyView() {
@@ -47,4 +50,22 @@ class RecipesListFragment : Fragment() {
         _binding = null
     }
 
+    private fun initRecycler(categoryId: Int?) {
+        val recipesListAdapter = RecipesListAdapter(STUB.getRecipesByCategoryId(categoryId))
+        binding.rvRecipes.adapter = recipesListAdapter
+        recipesListAdapter.setOnItemClickListener(object :
+            RecipesListAdapter.OnItemClickListener {
+            override fun onItemClick(recipeId: Int) {
+                openRecipesByRecipeId(recipeId)
+                Log.i("Выбор категории", "Пользователь выбрал: $recipeId")
+            }
+        })
+    }
+
+    private fun openRecipesByRecipeId(categoryId: Int) {
+        parentFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace<RecipeFragment>(R.id.mainContainer)
+        }
+    }
 }
