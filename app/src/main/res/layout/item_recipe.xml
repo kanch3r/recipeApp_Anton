@@ -22,7 +22,7 @@
             android:id="@+id/ivRecipeCard"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_height_image"
-            android:contentDescription="@string/category_image_desc"
+            android:contentDescription="@string/image_of_recipe"
             android:scaleType="centerCrop" />
 
         <TextView

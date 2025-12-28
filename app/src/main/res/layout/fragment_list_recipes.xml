@@ -49,9 +49,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/layout_normal_size"
         android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="1"
-        tools:itemCount="6"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="8"
         tools:listitem="@layout/item_recipe" />
 
 </LinearLayout>

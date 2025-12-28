@@ -44,7 +44,7 @@ object STUB {
         ),
     )
 
-    val burgerRecipes = listOf(
+    private val burgerRecipes = listOf(
         Recipe(
             id = 0,
             title = "Классический гамбургер",

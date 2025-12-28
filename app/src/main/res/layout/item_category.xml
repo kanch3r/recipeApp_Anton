@@ -30,7 +30,7 @@
             style="@style/StyleCardViewTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/layout_normal_size"
+            android:padding="@dimen/padding_text_view"
             tools:text="заголовок" />
 
         <TextView
@@ -38,7 +38,7 @@
             style="@style/StyleCardViewDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/layout_normal_size"
+            android:padding="@dimen/padding_text_view"
             tools:text="описание" />
 
     </LinearLayout>

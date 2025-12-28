@@ -1,5 +1,6 @@
 package com.example.recipeapp_anton
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -38,6 +39,23 @@ class RecipesListFragment : Fragment() {
         categoryImageUrl = requireArguments().getString(Constants.Bundle.ARG_CATEGORY_IMAGE_URL)
 
         initRecycler(categoryId)
+        binding.tvCategories.text = categoryName
+
+        val localImageUrl = categoryImageUrl
+        val drawable = if (localImageUrl != null) {
+            try {
+                view.context.assets
+                    .open(localImageUrl)
+                    .use { inputStream ->
+                        Drawable.createFromStream(inputStream, null)
+                    }
+            } catch (e: Exception) {
+                Log.i("catch exception", "Image not found: $categoryImageUrl")
+                null
+            }
+        } else null
+
+        binding.ivRecipes.setImageDrawable(drawable)
 
         Log.i(
             "Результат передачи",
