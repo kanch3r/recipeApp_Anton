@@ -17,7 +17,7 @@
             android:id="@+id/ivRecipes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/category_image_list_desc"
+            android:contentDescription="@string/category_image_title"
             android:scaleType="centerCrop"
             android:src="@drawable/bcg_categories"
             app:layout_constraintBottom_toBottomOf="parent"

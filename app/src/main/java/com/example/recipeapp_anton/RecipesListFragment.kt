@@ -74,13 +74,13 @@ class RecipesListFragment : Fragment() {
         recipesListAdapter.setOnItemClickListener(object :
             RecipesListAdapter.OnItemClickListener {
             override fun onItemClick(recipeId: Int) {
-                openRecipesByRecipeId(recipeId)
+                openRecipeByRecipeId(recipeId)
                 Log.i("Выбор категории", "Пользователь выбрал: $recipeId")
             }
         })
     }
 
-    private fun openRecipesByRecipeId(categoryId: Int) {
+    private fun openRecipeByRecipeId(recipeId: Int) {
         parentFragmentManager.commit {
             setReorderingAllowed(true)
             replace<RecipeFragment>(R.id.mainContainer)

@@ -5,7 +5,7 @@
     android:id="@+id/cvCategoryElement"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/layout_normal_size"
+    android:layout_margin="8dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
@@ -22,7 +22,7 @@
             android:id="@+id/ivCategoryCard"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_height_image"
-            android:contentDescription="@string/category_image_desc"
+            android:contentDescription="@string/image_of_category"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -30,7 +30,7 @@
             style="@style/StyleCardViewTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_text_view"
+            android:padding="@dimen/layout_normal_size"
             tools:text="заголовок" />
 
         <TextView
@@ -38,7 +38,8 @@
             style="@style/StyleCardViewDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_text_view"
+            android:paddingHorizontal="@dimen/layout_normal_size"
+            android:paddingBottom="@dimen/layout_normal_size"
             tools:text="описание" />
 
     </LinearLayout>
