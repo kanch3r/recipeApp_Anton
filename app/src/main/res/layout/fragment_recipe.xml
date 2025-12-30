@@ -6,6 +6,7 @@
     tools:context=".RecipeFragment">
 
     <TextView
+        android:id="@+id/testRecipeTitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="тут будет описание рецепта" />

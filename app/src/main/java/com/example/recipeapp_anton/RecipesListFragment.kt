@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.recipeapp_anton.databinding.FragmentListRecipesBinding
@@ -71,6 +72,7 @@ class RecipesListFragment : Fragment() {
     private fun initRecycler(categoryId: Int?) {
         val recipesListAdapter = RecipesListAdapter(STUB.getRecipesByCategoryId(categoryId))
         binding.rvRecipes.adapter = recipesListAdapter
+
         recipesListAdapter.setOnItemClickListener(object :
             RecipesListAdapter.OnItemClickListener {
             override fun onItemClick(recipeId: Int) {
@@ -81,9 +83,14 @@ class RecipesListFragment : Fragment() {
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
+        val recipe = STUB.getRecipeById(recipeId)
+        Log.i("Выбор рецепта", "Пользователь выбрал рецепт: ${recipe?.title}")
+
+        val bundle = bundleOf(Constants.Bundle.ARG_RECIPE to recipe)
+
         parentFragmentManager.commit {
             setReorderingAllowed(true)
-            replace<RecipeFragment>(R.id.mainContainer)
+            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
         }
     }
 }
