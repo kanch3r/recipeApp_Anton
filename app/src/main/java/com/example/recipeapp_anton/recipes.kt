@@ -270,4 +270,6 @@ object STUB {
 
     fun getRecipesByCategoryId(categoryId: Int?) =
         if (categoryId == 0) burgerRecipes else emptyList()
+
+    fun getRecipeById(recipeId: Int) = burgerRecipes.find { it.id == recipeId }
 }
