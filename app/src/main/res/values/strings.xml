@@ -2,6 +2,8 @@
     <string name="app_name">recipeApp_Anton</string>
     <string name="title_category">категории</string>
     <string name="title_favorites">избранное</string>
+    <string name="recipe_ingredients">ингредиенты</string>
+    <string name="recipe_method">способ приготовления</string>
     <string name="category_image_title">обложка списка категории</string>
     <string name="image_of_category">обложка категории рецепта</string>
     <string name="image_of_recipe">обложка рецепта</string>
