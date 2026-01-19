@@ -2,15 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/layout_normal_size">
 
     <TextView
         android:id="@+id/tvMethodDescription"
         style="@style/StyleViewText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/padding_normal_size"
-        android:paddingVertical="@dimen/layout_normal_size"
         tools:text="описание метода">
 
     </TextView>

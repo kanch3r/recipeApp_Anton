@@ -76,8 +76,8 @@ class RecipeFragment : Fragment() {
 
     private fun createDivider(): MaterialDividerItemDecoration {
         return MaterialDividerItemDecoration(requireContext(), 1).apply {
-            dividerInsetStart = 12
-            dividerInsetEnd = 12
+            dividerInsetStart = resources.getDimensionPixelSize(R.dimen.padding_normal_size)
+            dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.padding_normal_size)
             isLastItemDecorated = false
             setDividerColorResource(requireContext(), R.color.divider_color)
         }
@@ -99,6 +99,6 @@ class RecipeFragment : Fragment() {
         } else null
 
         binding.ivRecipe.setImageDrawable(drawable)
-        binding.testRecipeTitle.text = recipe?.title
+        binding.tvRecipeTitle.text = recipe?.title
     }
 }

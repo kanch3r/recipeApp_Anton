@@ -4,34 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/layout_medium_size">
+    android:layout_margin="@dimen/layout_normal_size">
 
     <TextView
         android:id="@+id/tvIngredientName"
-        style="@style/StyleViewText"
+        style="@style/StyleViewIngredientText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="true"
+        android:layout_marginEnd="141dp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="куриное яйцо" />
 
     <TextView
-        android:id="@+id/tvIngredientQuantity"
-        style="@style/StyleViewText"
+        android:id="@+id/tvIngredientQuantityAndMeasures"
+        style="@style/StyleViewIngredientText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/layout_margin_gap"
-        android:textAllCaps="true"
-        app:layout_constraintEnd_toStartOf="@+id/tvIngredientMeasure"
-        tools:text="2" />
-
-    <TextView
-        android:id="@+id/tvIngredientMeasure"
-        style="@style/StyleViewText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="true"
+        android:layout_marginStart="220dp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="штуки" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2 штуки" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
