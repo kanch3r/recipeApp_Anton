@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import com.example.recipeapp_anton.databinding.FragmentRecipeBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -60,6 +61,26 @@ class RecipeFragment : Fragment() {
             isNestedScrollingEnabled = false
             adapter = ingredientAdapter
         }
+
+        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seekBar: SeekBar?,
+                progress: Int,
+                fromUser: Boolean
+            ) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
+
     }
 
     private fun initMethodRecycler() {
@@ -76,8 +97,8 @@ class RecipeFragment : Fragment() {
 
     private fun createDivider(): MaterialDividerItemDecoration {
         return MaterialDividerItemDecoration(requireContext(), 1).apply {
-            dividerInsetStart = resources.getDimensionPixelSize(R.dimen.padding_normal_size)
-            dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.padding_normal_size)
+            dividerInsetStart = resources.getDimensionPixelSize(R.dimen.layout_normal_size)
+            dividerInsetEnd = resources.getDimensionPixelSize(R.dimen.layout_normal_size)
             isLastItemDecorated = false
             setDividerColorResource(requireContext(), R.color.divider_color)
         }

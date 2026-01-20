@@ -45,14 +45,59 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            style="@style/StyleTitleView"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/layout_medium_size"
-            android:layout_marginTop="@dimen/layout_medium_size"
-            android:layout_marginBottom="@dimen/layout_normal_size"
-            android:text="@string/recipe_ingredients" />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/textViewIngredients"
+                style="@style/StyleTitleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_ingredients"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewPortion"
+                style="@style/StylePortionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="6dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintBottom_toTopOf="@id/seekBar"
+                app:layout_constraintEnd_toStartOf="@+id/portionQuantity"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewIngredients"
+                android:text="Порции:" />
+
+            <TextView
+                android:id="@+id/portionQuantity"
+                style="@style/StylePortionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="6dp"
+                android:layout_marginStart="6dp"
+                app:layout_constraintBottom_toTopOf="@id/seekBar"
+                app:layout_constraintStart_toEndOf="@+id/textViewPortion"
+                app:layout_constraintTop_toBottomOf="@+id/textViewIngredients"
+                android:text="1" />
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="5"
+                android:progress="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewPortion" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvIngredients"

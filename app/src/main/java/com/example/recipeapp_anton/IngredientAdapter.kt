@@ -26,7 +26,16 @@ class IngredientAdapter(val dataSet: List<Ingredient>) :
         viewHolder.ingredientName.text = ingredients.description
         viewHolder.ingredientQuantityAndMeasures.text =
             "${ingredients.quantity} ${ingredients.unitOfMeasure}"
+
+
+
     }
 
     override fun getItemCount() = dataSet.size
+
+
+    private fun updateIngredients(progress: Int) {
+    }
+
+
 }
