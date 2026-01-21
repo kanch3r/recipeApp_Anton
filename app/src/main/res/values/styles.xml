@@ -33,5 +33,23 @@
         <item name="android:fontFamily">@font/montserrat_medium</item>
     </style>
 
+    <style name="StyleViewText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/medium_text_size</item>
+        <item name="android:textColor">@color/description_text_color</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
+    </style>
+
+    <style name="StyleViewIngredientText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/medium_text_size</item>
+        <item name="android:textColor">@color/description_text_color</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="StylePortionTextView" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/normal_text_size</item>
+        <item name="android:textColor">@color/description_text_color</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
+    </style>
 
 </resources>
