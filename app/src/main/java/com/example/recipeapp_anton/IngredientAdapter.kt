@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp_anton.databinding.IngredientRecipeBinding
 import models.Ingredient
+import java.math.BigDecimal
 
 class IngredientAdapter(val dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientAdapter.ViewHolder>() {
@@ -33,20 +34,16 @@ class IngredientAdapter(val dataSet: List<Ingredient>) :
                 "${ingredients.quantity} ${ingredients.unitOfMeasure}"
         } else {
             val newIngredientQuantity =
-                when {
-                    (ingredients.quantity.toIntOrNull() != null) ->
-                        (ingredients.quantity.toInt() * multiplier).toString()
-
-                    (ingredients.quantity.toDoubleOrNull() != null) ->
-                        roundDoubleToInt(ingredients.quantity.toDouble() * multiplier)
-
-                    else -> {
-                        Log.i(
-                            "catch exception",
-                            "Ошибка: некорректное значение ингредиента '${ingredients.quantity}'"
-                        )
-                        null
-                    }
+                if (ingredients.quantity.toBigDecimalOrNull() != null) {
+                    ingredients.quantity.toBigDecimal().multiply(multiplier.toBigDecimal())
+                        .stripTrailingZeros()
+                        .toPlainString()
+                } else {
+                    Log.i(
+                        "catch exception",
+                        "Ошибка: некорректное значение ингредиента '${ingredients.quantity}'"
+                    )
+                    null
                 }
             viewHolder.ingredientQuantityAndMeasures.text =
                 "$newIngredientQuantity ${ingredients.unitOfMeasure}"
@@ -55,13 +52,8 @@ class IngredientAdapter(val dataSet: List<Ingredient>) :
 
     override fun getItemCount() = dataSet.size
 
-
     fun updateIngredients(progress: Int) {
         multiplier = progress
         notifyDataSetChanged()
-    }
-
-    private fun roundDoubleToInt(input: Double): String {
-        return if (input % 1 == 0.0) input.toInt().toString() else input.toString()
     }
 }
