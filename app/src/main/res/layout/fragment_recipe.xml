@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/layout_small_size"
-                android:text="Порции:"
+                android:text="@string/recipe_portions"
                 app:layout_constraintBottom_toTopOf="@id/seekBar"
                 app:layout_constraintEnd_toStartOf="@+id/tvPortionQuantity"
                 app:layout_constraintHorizontal_bias="0.0"

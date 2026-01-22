@@ -68,7 +68,7 @@ class RecipeFragment : Fragment() {
                 progress: Int,
                 fromUser: Boolean
             ) {
-                binding.tvPortionQuantity.text= progress.toString()
+                binding.tvPortionQuantity.text = progress.toString()
                 ingredientAdapter.updateIngredients(progress)
             }
 

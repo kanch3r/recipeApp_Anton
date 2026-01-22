@@ -8,4 +8,5 @@
     <string name="image_of_category">обложка категории рецепта</string>
     <string name="image_of_recipe">обложка рецепта</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="recipe_portions">Порции:</string>
 </resources>
