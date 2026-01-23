@@ -68,16 +68,13 @@ class RecipeFragment : Fragment() {
                 progress: Int,
                 fromUser: Boolean
             ) {
-                TODO("Not yet implemented")
+                binding.tvPortionQuantity.text = progress.toString()
+                ingredientAdapter.updateIngredients(progress)
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                TODO("Not yet implemented")
-            }
-
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 
         })
 
