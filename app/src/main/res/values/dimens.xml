@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="layout_height_image">130dp</dimen>
+    <dimen name="layout_seekbar_height">30dp</dimen>
     <dimen name="layout_margin_gap">2dp</dimen>
     <dimen name="layout_height_constraintlayout">224dp</dimen>
     <dimen name="padding_text_view_image">10dp</dimen>
-    <dimen name="padding_text_view">4dp</dimen>
+    <dimen name="tiny_size">4dp</dimen>
     <dimen name="layout_medium_size">16dp</dimen>
     <dimen name="layout_normal_size">8dp</dimen>
     <dimen name="layout_small_size">6dp</dimen>

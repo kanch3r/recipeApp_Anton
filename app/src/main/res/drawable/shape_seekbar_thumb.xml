@@ -3,6 +3,6 @@
     <solid android:color="@color/seek_thumb_color" />
     <corners android:radius="2dp" />
     <size
-        android:width="8dp"
-        android:height="30dp" />
+        android:width="@dimen/layout_normal_size"
+        android:height="@dimen/layout_seekbar_height" />
 </shape>

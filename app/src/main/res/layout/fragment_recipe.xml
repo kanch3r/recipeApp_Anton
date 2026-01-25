@@ -49,7 +49,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="@dimen/layout_medium_size"
             android:layout_marginTop="@dimen/layout_medium_size"
             android:layout_marginBottom="@dimen/layout_normal_size">
 
@@ -58,6 +57,7 @@
                 style="@style/StyleTitleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/layout_medium_size"
                 android:text="@string/recipe_ingredients"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,6 +66,7 @@
                 style="@style/StylePortionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/layout_medium_size"
                 android:layout_marginVertical="@dimen/layout_small_size"
                 android:text="@string/recipe_portions"
                 app:layout_constraintBottom_toTopOf="@id/seekBar"
@@ -81,16 +82,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/layout_small_size"
                 android:layout_marginStart="@dimen/layout_small_size"
-                android:text="1"
+                android:text="@string/default_portions_value"
                 app:layout_constraintBottom_toTopOf="@id/seekBar"
                 app:layout_constraintStart_toEndOf="@+id/tvPortion"
                 app:layout_constraintTop_toBottomOf="@+id/tvIngredients" />
 
             <SeekBar
                 android:id="@+id/seekBar"
-                style="@style/styleSeekBar"
+                style="@style/StyleSeekBar"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="@dimen/layout_seekbar_height"
                 android:max="5"
                 android:min="1"
                 android:progress="1"
@@ -108,7 +109,7 @@
             android:layout_marginVertical="@dimen/layout_normal_size"
             android:background="@drawable/shape_drawable_text"
             android:orientation="vertical"
-            android:padding="@dimen/padding_text_view"
+            android:padding="@dimen/tiny_size"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/ingredient_recipe" />
 
@@ -128,7 +129,7 @@
             android:layout_marginVertical="@dimen/layout_normal_size"
             android:background="@drawable/shape_drawable_text"
             android:orientation="vertical"
-            android:padding="@dimen/padding_text_view"
+            android:padding="@dimen/tiny_size"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/method_recipe" />
 
