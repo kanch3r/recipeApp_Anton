@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp_anton.databinding.IngredientRecipeBinding
 import models.Ingredient
-import java.math.BigDecimal
 
 class IngredientAdapter(val dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientAdapter.ViewHolder>() {
@@ -25,35 +24,50 @@ class IngredientAdapter(val dataSet: List<Ingredient>) :
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int, payloads: List<Any>) {
         val ingredients = dataSet[position]
-        viewHolder.ingredientName.text = ingredients.description
 
-        if (multiplier == Constants.DEFAULT_MULTIPLIER) {
-            viewHolder.ingredientQuantityAndMeasures.text =
-                "${ingredients.quantity} ${ingredients.unitOfMeasure}"
-        } else {
-            val newIngredientQuantity =
-                if (ingredients.quantity.toBigDecimalOrNull() != null) {
-                    ingredients.quantity.toBigDecimal().multiply(multiplier.toBigDecimal())
-                        .stripTrailingZeros()
-                        .toPlainString()
-                } else {
-                    Log.i(
-                        "catch exception",
-                        "Ошибка: некорректное значение ингредиента '${ingredients.quantity}'"
-                    )
-                    null
-                }
-            viewHolder.ingredientQuantityAndMeasures.text =
-                "$newIngredientQuantity ${ingredients.unitOfMeasure}"
+        with(viewHolder) {
+            if (payloads.contains(Constants.PAYLOAD_UPDATE_QUANTITY)) {
+                ingredientQuantityAndMeasures.text = calculateQuantity(ingredients)
+                Log.i("!!!", "payload = TRUE")
+            } else {
+                ingredientName.text = ingredients.description
+                ingredientQuantityAndMeasures.text = calculateQuantity(ingredients)
+                Log.i("!!!", "payload = false")
+            }
         }
+    }
+
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        onBindViewHolder(viewHolder, position, emptyList())
+        Log.i("!!!", " выполнился onBindViewHolder БЕЗ payloads")
     }
 
     override fun getItemCount() = dataSet.size
 
     fun updateIngredients(progress: Int) {
         multiplier = progress
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, itemCount, Constants.PAYLOAD_UPDATE_QUANTITY)
+    }
+
+    private fun calculateQuantity(ingredient: Ingredient): String {
+        return if (multiplier == Constants.DEFAULT_MULTIPLIER) {
+            "${ingredient.quantity} ${ingredient.unitOfMeasure}"
+        } else {
+            val newIngredientQuantity =
+                if (ingredient.quantity.toBigDecimalOrNull() != null) {
+                    ingredient.quantity.toBigDecimal().multiply(multiplier.toBigDecimal())
+                        .stripTrailingZeros()
+                        .toPlainString()
+                } else {
+                    Log.i(
+                        "catch exception",
+                        "Ошибка: некорректное значение ингредиента '${ingredient.quantity}'"
+                    )
+                    null
+                }
+            "$newIngredientQuantity ${ingredient.unitOfMeasure}"
+        }
     }
 }
