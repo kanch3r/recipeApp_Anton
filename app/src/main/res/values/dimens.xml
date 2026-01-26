@@ -2,7 +2,7 @@
 <resources>
     <dimen name="layout_height_image">130dp</dimen>
     <dimen name="layout_seekbar_height">30dp</dimen>
-    <dimen name="layout_margin_gap">2dp</dimen>
+    <dimen name="narrow_size">2dp</dimen>
     <dimen name="layout_height_constraintlayout">224dp</dimen>
     <dimen name="padding_text_view_image">10dp</dimen>
     <dimen name="tiny_size">4dp</dimen>

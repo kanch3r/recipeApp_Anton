@@ -115,7 +115,10 @@ class RecipeFragment : Fragment() {
                 null
             }
         } else null
-
+        with(binding.ibFavoriteIcon) {
+            setImageResource(R.drawable.ic_heart_filled_transparent)
+            setOnClickListener { setImageResource(R.drawable.ic_heart_filled) }
+        }
         binding.ivRecipe.setImageDrawable(drawable)
         binding.tvRecipeTitle.text = recipe?.title
     }
