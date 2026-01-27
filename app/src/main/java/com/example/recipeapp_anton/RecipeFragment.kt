@@ -1,5 +1,6 @@
 package com.example.recipeapp_anton
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.example.recipeapp_anton.databinding.FragmentRecipeBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import models.Recipe
+import kotlin.with
 
 class RecipeFragment : Fragment() {
 
@@ -56,12 +58,30 @@ class RecipeFragment : Fragment() {
         val ingredientAdapter = IngredientAdapter(dataSet)
         val methodDivider = createDivider()
 
+        setupIngredients(ingredientAdapter, methodDivider)
+        setupSeekBar(ingredientAdapter)
+    }
+
+    private fun initMethodRecycler() {
+        val dataSet = recipe?.method ?: return
+        val methodAdapter = MethodAdapter(dataSet)
+        val methodDivider = createDivider()
+
+        setupMethod(methodAdapter, methodDivider)
+    }
+
+    private fun setupIngredients(
+        ingredientAdapter: IngredientAdapter,
+        methodDivider: MaterialDividerItemDecoration
+    ) {
         binding.rvIngredients.apply {
             addItemDecoration(methodDivider)
             isNestedScrollingEnabled = false
             adapter = ingredientAdapter
         }
+    }
 
+    private fun setupSeekBar(ingredientAdapter: IngredientAdapter) {
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
                 seekBar: SeekBar?,
@@ -73,18 +93,14 @@ class RecipeFragment : Fragment() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-
         })
-
     }
 
-    private fun initMethodRecycler() {
-        val dataSet = recipe?.method ?: return
-        val methodAdapter = MethodAdapter(dataSet)
-        val methodDivider = createDivider()
-
+    private fun setupMethod(
+        methodAdapter: MethodAdapter,
+        methodDivider: MaterialDividerItemDecoration
+    ) {
         binding.rvMethod.apply {
             addItemDecoration(methodDivider)
             isNestedScrollingEnabled = false
@@ -102,6 +118,12 @@ class RecipeFragment : Fragment() {
     }
 
     private fun initUI(view: View) {
+        setImageRecipe(view)
+        setupFavoriteIconButton()
+        setTitleRecipe()
+    }
+
+    private fun setImageRecipe(view: View) {
         val localImageUrl = recipe?.imageUrl
         val drawable = if (localImageUrl != null) {
             try {
@@ -115,11 +137,68 @@ class RecipeFragment : Fragment() {
                 null
             }
         } else null
-        with(binding.ibFavoriteIcon) {
-            setImageResource(R.drawable.ic_heart_filled_transparent)
-            setOnClickListener { setImageResource(R.drawable.ic_heart_filled) }
-        }
         binding.ivRecipe.setImageDrawable(drawable)
+    }
+
+    private fun setupFavoriteIconButton() {
+        val recipeId: Int = recipe?.id ?: run {
+            binding.ibFavoriteIcon.isEnabled = false
+            Log.i("catch exception", "Отсутствует ID рецепта. Кнопка отключена")
+            return
+        }
+
+        updateFavoriteIcon(recipeId)
+
+        binding.ibFavoriteIcon.setOnClickListener {
+            val favoriteList = getFavorites()
+
+            if (favoriteList.contains(recipeId.toString())) {
+                favoriteList.remove(recipeId.toString())
+                Log.i("SP", "Рецепт $recipeId удалён из избранного")
+            } else {
+                favoriteList.add(recipeId.toString())
+                Log.i("SP", "Рецепт $recipeId добавлен в избранное")
+            }
+
+            saveFavorite(favoriteList)
+            updateFavoriteIcon(recipeId)
+        }
+    }
+
+    private fun updateFavoriteIcon(recipeId: Int) {
+        val favoriteList = getFavorites()
+        val favIcon = if (favoriteList.contains(recipeId.toString())) {
+            R.drawable.ic_heart_filled
+        } else {
+            R.drawable.ic_heart_filled_transparent
+        }
+        binding.ibFavoriteIcon.setImageResource(favIcon)
+    }
+
+    private fun setTitleRecipe() {
         binding.tvRecipeTitle.text = recipe?.title
+    }
+
+    private fun saveFavorite(favoriteIds: Set<String>) {
+        val sharedPref = requireContext().getSharedPreferences(
+            Constants.PREFERENCE_FAVORITE_FILE,
+            Context.MODE_PRIVATE
+        )
+        sharedPref.edit()
+            .putStringSet(Constants.PREFERENCE_FAVORITE_RECIPE, favoriteIds)
+            .apply()
+    }
+
+    private fun getFavorites(): MutableSet<String> {
+        val sharedPref = requireContext().getSharedPreferences(
+            Constants.PREFERENCE_FAVORITE_FILE,
+            Context.MODE_PRIVATE
+        )
+        val currentDataSet = sharedPref.getStringSet(
+            Constants.PREFERENCE_FAVORITE_RECIPE,
+            emptySet<String>()
+        )
+        val newDataSet = HashSet<String>(currentDataSet)
+        return newDataSet
     }
 }

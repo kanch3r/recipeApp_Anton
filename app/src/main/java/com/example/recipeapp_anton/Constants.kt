@@ -4,6 +4,8 @@ object Constants {
 
     const val DEFAULT_MULTIPLIER = 1
     const val PAYLOAD_UPDATE_QUANTITY = "update_quantity"
+    const val PREFERENCE_FAVORITE_FILE = "favorite_recipes"
+    const val PREFERENCE_FAVORITE_RECIPE = "list_of_favorite_recipes"
     object Bundle {
         const val ARG_CATEGORY_ID = "category_id"
         const val ARG_CATEGORY_NAME = "category_name"
