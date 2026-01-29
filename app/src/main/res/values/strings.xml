@@ -11,4 +11,7 @@
     <string name="recipe_portions">Порции:</string>
     <string name="default_portions_value">1</string>
     <string name="favorite_icon">иконка добавления в избранное</string>
+    <string name="empty_favorites_text">Вы еще не добавили ни одного рецепта в избранное</string>
+    <string name="favorite_image_text">обложка списка избранное</string>
+    <string name="favorite_text">избранное</string>
 </resources>
