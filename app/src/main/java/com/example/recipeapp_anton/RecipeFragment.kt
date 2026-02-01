@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import com.example.recipeapp_anton.databinding.FragmentRecipeBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import models.Recipe
-import kotlin.with
 
 class RecipeFragment : Fragment() {
 
@@ -150,7 +149,7 @@ class RecipeFragment : Fragment() {
         updateFavoriteIcon(recipeId)
 
         binding.ibFavoriteIcon.setOnClickListener {
-            val favoriteList = getFavorites()
+            val favoriteList = FavoritesSharedPreferences.getFavorites(requireContext())
 
             if (favoriteList.contains(recipeId.toString())) {
                 favoriteList.remove(recipeId.toString())
@@ -160,13 +159,13 @@ class RecipeFragment : Fragment() {
                 Log.i("SP", "Рецепт $recipeId добавлен в избранное")
             }
 
-            saveFavorite(favoriteList)
+            FavoritesSharedPreferences.saveFavorite(requireContext(), favoriteList)
             updateFavoriteIcon(recipeId)
         }
     }
 
     private fun updateFavoriteIcon(recipeId: Int) {
-        val favoriteList = getFavorites()
+        val favoriteList = FavoritesSharedPreferences.getFavorites(requireContext())
         val favIcon = if (favoriteList.contains(recipeId.toString())) {
             R.drawable.ic_heart_filled
         } else {
@@ -177,28 +176,5 @@ class RecipeFragment : Fragment() {
 
     private fun setTitleRecipe() {
         binding.tvRecipeTitle.text = recipe?.title
-    }
-
-    private fun saveFavorite(favoriteIds: Set<String>) {
-        val sharedPref = requireContext().getSharedPreferences(
-            Constants.PREFERENCE_FAVORITE_FILE,
-            Context.MODE_PRIVATE
-        )
-        sharedPref.edit()
-            .putStringSet(Constants.PREFERENCE_FAVORITE_RECIPE, favoriteIds)
-            .apply()
-    }
-
-    private fun getFavorites(): MutableSet<String> {
-        val sharedPref = requireContext().getSharedPreferences(
-            Constants.PREFERENCE_FAVORITE_FILE,
-            Context.MODE_PRIVATE
-        )
-        val currentDataSet = sharedPref.getStringSet(
-            Constants.PREFERENCE_FAVORITE_RECIPE,
-            emptySet<String>()
-        )
-        val newDataSet = HashSet<String>(currentDataSet)
-        return newDataSet
     }
 }
