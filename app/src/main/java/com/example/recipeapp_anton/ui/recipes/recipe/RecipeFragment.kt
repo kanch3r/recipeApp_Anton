@@ -1,6 +1,5 @@
-package com.example.recipeapp_anton
+package com.example.recipeapp_anton.ui.recipes.recipe
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -10,9 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
+import com.example.recipeapp_anton.ui.recipes.recipe.adapter.IngredientAdapter
+import com.example.recipeapp_anton.ui.recipes.recipe.adapter.MethodAdapter
+import com.example.recipeapp_anton.R
+import com.example.recipeapp_anton.data.Constants
+import com.example.recipeapp_anton.data.FavoritesSharedPreferences
 import com.example.recipeapp_anton.databinding.FragmentRecipeBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
-import models.Recipe
+import com.example.recipeapp_anton.model.Recipe
 
 class RecipeFragment : Fragment() {
 

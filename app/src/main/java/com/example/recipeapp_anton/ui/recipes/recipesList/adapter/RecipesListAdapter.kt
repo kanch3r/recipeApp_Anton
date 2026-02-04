@@ -1,4 +1,4 @@
-package com.example.recipeapp_anton
+package com.example.recipeapp_anton.ui.recipes.recipesList.adapter
 
 import android.graphics.drawable.Drawable
 import android.util.Log
@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp_anton.databinding.ItemRecipeBinding
-import models.Recipe
+import com.example.recipeapp_anton.model.Recipe
 
 class RecipesListAdapter(val dataSet: List<Recipe>) :
     RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {

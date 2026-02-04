@@ -1,4 +1,4 @@
-package com.example.recipeapp_anton
+package com.example.recipeapp_anton.ui.categories.adapter
 
 import android.graphics.drawable.Drawable
 import android.util.Log
@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp_anton.databinding.ItemCategoryBinding
-import models.Category
+import com.example.recipeapp_anton.model.Category
 
 class CategoriesListAdapter(val dataSet: List<Category>) :
     RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {

@@ -1,16 +1,21 @@
-package com.example.recipeapp_anton
+package com.example.recipeapp_anton.ui.recipes.recipesList
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.example.recipeapp_anton.R
+import com.example.recipeapp_anton.ui.recipes.recipesList.adapter.RecipesListAdapter
+import com.example.recipeapp_anton.data.Constants
+import com.example.recipeapp_anton.data.STUB
 import com.example.recipeapp_anton.databinding.FragmentListRecipesBinding
+import com.example.recipeapp_anton.ui.recipes.recipe.RecipeFragment
 
 class RecipesListFragment : Fragment() {
     private var _binding: FragmentListRecipesBinding? = null

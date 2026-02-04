@@ -1,4 +1,4 @@
-package com.example.recipeapp_anton
+package com.example.recipeapp_anton.ui.recipes.favorites
 
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +10,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.example.recipeapp_anton.R
+import com.example.recipeapp_anton.ui.recipes.recipesList.adapter.RecipesListAdapter
+import com.example.recipeapp_anton.data.Constants
+import com.example.recipeapp_anton.data.FavoritesSharedPreferences
+import com.example.recipeapp_anton.data.STUB
 import com.example.recipeapp_anton.databinding.FragmentFavoritesBinding
+import com.example.recipeapp_anton.ui.recipes.recipe.RecipeFragment
 
 class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null

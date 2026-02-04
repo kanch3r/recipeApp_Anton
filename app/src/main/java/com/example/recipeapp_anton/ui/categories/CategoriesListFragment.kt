@@ -1,15 +1,20 @@
-package com.example.recipeapp_anton
+package com.example.recipeapp_anton.ui.categories
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.example.recipeapp_anton.ui.categories.adapter.CategoriesListAdapter
+import com.example.recipeapp_anton.R
+import com.example.recipeapp_anton.data.Constants
+import com.example.recipeapp_anton.data.STUB
 import com.example.recipeapp_anton.databinding.FragmentListCategoriesBinding
+import com.example.recipeapp_anton.ui.recipes.recipesList.RecipesListFragment
 
 class CategoriesListFragment : Fragment() {
 
