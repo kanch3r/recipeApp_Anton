@@ -1,4 +1,4 @@
-package com.example.recipeapp_anton
+package com.example.recipeapp_anton.data
 
 object Constants {
 

@@ -1,12 +1,13 @@
-package com.example.recipeapp_anton
+package com.example.recipeapp_anton.ui.recipes.recipe.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.databinding.IngredientRecipeBinding
-import models.Ingredient
+import com.example.recipeapp_anton.model.Ingredient
 
 class IngredientAdapter(val dataSet: List<Ingredient>) :
     RecyclerView.Adapter<IngredientAdapter.ViewHolder>() {

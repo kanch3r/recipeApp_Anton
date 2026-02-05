@@ -1,6 +1,7 @@
-package com.example.recipeapp_anton
+package com.example.recipeapp_anton.data
 
 import android.content.Context
+import com.example.recipeapp_anton.data.Constants
 
 object FavoritesSharedPreferences {
 
