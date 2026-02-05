@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.recipeapp_anton.ui.recipes.recipe.adapter.IngredientAdapter
 import com.example.recipeapp_anton.ui.recipes.recipe.adapter.MethodAdapter
 import com.example.recipeapp_anton.R
@@ -19,6 +20,8 @@ import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.example.recipeapp_anton.model.Recipe
 
 class RecipeFragment : Fragment() {
+
+    private val viewModel: RecipeViewModel by viewModels()
 
     private var _binding: FragmentRecipeBinding? = null
 
@@ -39,6 +42,10 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.state.observe(viewLifecycleOwner) { data ->
+            Log.i("HAPPY", "Here is the value of isFavorite variable:${data.isFavorite}")
+        }
 
         recipe = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requireArguments().getParcelable(Constants.Bundle.ARG_RECIPE, Recipe::class.java)
