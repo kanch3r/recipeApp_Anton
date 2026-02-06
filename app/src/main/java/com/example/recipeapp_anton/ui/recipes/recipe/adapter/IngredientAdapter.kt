@@ -31,11 +31,9 @@ class IngredientAdapter(val dataSet: List<Ingredient>) :
         with(viewHolder) {
             if (payloads.contains(Constants.PAYLOAD_UPDATE_QUANTITY)) {
                 ingredientQuantityAndMeasures.text = calculateQuantity(ingredients)
-                Log.i("!!!", "payload = TRUE")
             } else {
                 ingredientName.text = ingredients.description
                 ingredientQuantityAndMeasures.text = calculateQuantity(ingredients)
-                Log.i("!!!", "payload = false")
             }
         }
     }
