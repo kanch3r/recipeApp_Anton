@@ -9,8 +9,9 @@ import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.databinding.IngredientRecipeBinding
 import com.example.recipeapp_anton.model.Ingredient
 
-class IngredientAdapter(val dataSet: List<Ingredient>) :
-    RecyclerView.Adapter<IngredientAdapter.ViewHolder>() {
+class IngredientAdapter() : RecyclerView.Adapter<IngredientAdapter.ViewHolder>() {
+
+    var dataSet: List<Ingredient> = emptyList()
 
     private var multiplier: Int = Constants.DEFAULT_MULTIPLIER
 

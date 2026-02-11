@@ -88,10 +88,8 @@ class RecipesListFragment : Fragment() {
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
-        val recipe = STUB.getRecipeById(recipeId)
-        Log.i("Выбор рецепта", "Пользователь выбрал рецепт: ${recipe?.title}")
 
-        val bundle = bundleOf(Constants.Bundle.ARG_RECIPE to recipe)
+        val bundle = bundleOf(Constants.Bundle.ARG_RECIPE_ID to recipeId)
 
         parentFragmentManager.commit {
             setReorderingAllowed(true)
