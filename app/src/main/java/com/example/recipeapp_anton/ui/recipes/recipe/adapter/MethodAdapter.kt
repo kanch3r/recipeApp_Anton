@@ -6,8 +6,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp_anton.databinding.MethodRecipeBinding
 
-class MethodAdapter(val dataSet: List<String>) :
-    RecyclerView.Adapter<MethodAdapter.ViewHolder>() {
+class MethodAdapter() : RecyclerView.Adapter<MethodAdapter.ViewHolder>() {
+
+    var dataSet: List<String> = emptyList()
 
     class ViewHolder(binding: MethodRecipeBinding) : RecyclerView.ViewHolder(binding.root) {
         val textView: TextView = binding.tvMethodDescription
