@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import com.example.recipeapp_anton.ui.categories.adapter.CategoriesListAdapter
 import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.data.Constants
@@ -16,7 +17,18 @@ import com.example.recipeapp_anton.data.STUB
 import com.example.recipeapp_anton.databinding.FragmentListCategoriesBinding
 import com.example.recipeapp_anton.ui.recipes.recipesList.RecipesListFragment
 
+class CategoryItemClickListener(val clickOnItem: (Int) -> Unit) :
+    CategoriesListAdapter.OnItemClickListener {
+    override fun onItemClick(categoryId: Int) {
+        clickOnItem(categoryId)
+    }
+}
+
 class CategoriesListFragment : Fragment() {
+
+    val viewModel: CategoriesListViewModel by viewModels()
+
+    val categoriesListAdapter: CategoriesListAdapter = CategoriesListAdapter()
 
     private var _binding: FragmentListCategoriesBinding? = null
 
@@ -36,34 +48,36 @@ class CategoriesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRecycler()
+        setupCategoryView()
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    private fun initRecycler() {
-        val categoriesListAdapter = CategoriesListAdapter(STUB.getCategories())
+    private fun setupCategoryView() {
+        viewModel.loadCategoryList()
+
         binding.rvCategories.adapter = categoriesListAdapter
 
-        categoriesListAdapter.setOnItemClickListener(object :
-            CategoriesListAdapter.OnItemClickListener {
-            override fun onItemClick(categoryId: Int) {
-                openRecipesByCategoryId(categoryId)
-                Log.i("Выбор категории", "Пользователь выбрал: $categoryId")
-            }
+        //listener
+
+        categoriesListAdapter.setOnItemClickListener(CategoryItemClickListener { categoryId ->
+            openRecipesByCategoryId(categoryId)
         })
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            categoriesListAdapter.dataSet = state.categoryList
+        }
+
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {
-        val category = STUB.getCategories().find { it.id == categoryId } ?: return
-        val bundle = bundleOf(
-            Constants.Bundle.ARG_CATEGORY_ID to category.id,
-            Constants.Bundle.ARG_CATEGORY_NAME to category.title,
-            Constants.Bundle.ARG_CATEGORY_IMAGE_URL to category.imageUrl
-        )
+
+        val bundle = bundleOf(Constants.Bundle.ARG_CATEGORY_ID to categoryId)
+
         parentFragmentManager.commit {
             setReorderingAllowed(true)
             replace<RecipesListFragment>(R.id.mainContainer, args = bundle)
