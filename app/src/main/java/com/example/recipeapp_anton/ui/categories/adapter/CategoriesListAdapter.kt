@@ -17,7 +17,7 @@ class CategoriesListAdapter() : RecyclerView.Adapter<CategoriesListAdapter.ViewH
 
     var itemClickListener: OnItemClickListener? = null
 
-    interface OnItemClickListener {
+    fun interface OnItemClickListener {
         fun onItemClick(categoryId: Int)
     }
 

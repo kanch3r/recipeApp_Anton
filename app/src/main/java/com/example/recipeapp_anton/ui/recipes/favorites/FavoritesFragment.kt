@@ -14,15 +14,9 @@ import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.ui.recipes.recipesList.adapter.RecipesListAdapter
 import com.example.recipeapp_anton.databinding.FragmentFavoritesBinding
+import com.example.recipeapp_anton.model.Recipe
 import com.example.recipeapp_anton.ui.recipes.recipe.RecipeFragment
 import kotlin.getValue
-
-class RecipeItemClickListener(val clickOnItem: (Int) -> Unit) :
-    RecipesListAdapter.OnItemClickListener {
-    override fun onItemClick(recipeId: Int) {
-        clickOnItem(recipeId)
-    }
-}
 
 class FavoritesFragment : Fragment() {
 
@@ -48,7 +42,11 @@ class FavoritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupFavoriteScreenView()
+        parseArguments()
+        setupViews()
+        setupListeners()
+        setupObservers()
+
     }
 
     override fun onDestroyView() {
@@ -56,22 +54,40 @@ class FavoritesFragment : Fragment() {
         _binding = null
     }
 
-    private fun setupFavoriteScreenView() {
 
+    private fun parseArguments() {
         viewModel.loadFavoritesRecipesList()
+    }
 
+    private fun setupViews() {
         binding.rvFavorites.adapter = favoriteListListAdapter
+    }
 
-        favoriteListListAdapter.setOnItemClickListener(
-            RecipeItemClickListener { recipeId ->
-                openRecipeByRecipeId(recipeId)
-            })
-
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            binding.constraintlayoutEmptyFavorites.isVisible = state.isFavoriteListEmpty
-            binding.rvFavorites.isVisible = state.isFavoriteListVisible
-            favoriteListListAdapter.dataSet = state.recipeList
+    private fun setupListeners() {
+        favoriteListListAdapter.setOnItemClickListener { recipeId ->
+            openRecipeByRecipeId(recipeId)
         }
+    }
+
+    private fun setupObservers() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            showOrHideLayout(
+                state.isFavoriteListEmpty,
+                state.isFavoriteListVisible
+            )
+            setRecycleViewData(state.recipeList)
+        }
+    }
+
+    private fun showOrHideLayout(constrainLayoutState: Boolean, rvLayoutState: Boolean) {
+        with(binding) {
+            constraintlayoutEmptyFavorites.isVisible = constrainLayoutState
+            rvFavorites.isVisible = rvLayoutState
+        }
+    }
+
+    private fun setRecycleViewData(recipeListDataset: List<Recipe>) {
+        favoriteListListAdapter.dataSet = recipeListDataset
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {

@@ -17,7 +17,7 @@ class RecipesListAdapter() : RecyclerView.Adapter<RecipesListAdapter.ViewHolder>
 
     var itemClickListener: OnItemClickListener? = null
 
-    interface OnItemClickListener {
+    fun interface OnItemClickListener {
         fun onItemClick(recipeId: Int)
     }
 

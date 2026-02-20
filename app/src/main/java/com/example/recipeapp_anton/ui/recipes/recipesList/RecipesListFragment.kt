@@ -18,13 +18,6 @@ import com.example.recipeapp_anton.databinding.FragmentListRecipesBinding
 import com.example.recipeapp_anton.model.Recipe
 import com.example.recipeapp_anton.ui.recipes.recipe.RecipeFragment
 
-class RecipeItemClickListener(val clickOnItem: (Int) -> Unit) :
-    RecipesListAdapter.OnItemClickListener {
-    override fun onItemClick(recipeId: Int) {
-        clickOnItem(recipeId)
-    }
-}
-
 class RecipesListFragment : Fragment() {
 
     private val viewModel: RecipesListViewModel by viewModels()
@@ -76,11 +69,9 @@ class RecipesListFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        recipesListAdapter.setOnItemClickListener(
-            RecipeItemClickListener { recipeId ->
-                openRecipeByRecipeId(recipeId)
-            }
-        )
+        recipesListAdapter.setOnItemClickListener { recipeId ->
+            openRecipeByRecipeId(recipeId)
+        }
     }
 
     private fun setupObservers() {

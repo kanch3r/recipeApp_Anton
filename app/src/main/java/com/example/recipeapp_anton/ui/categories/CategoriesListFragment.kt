@@ -1,7 +1,6 @@
 package com.example.recipeapp_anton.ui.categories
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +12,9 @@ import androidx.fragment.app.viewModels
 import com.example.recipeapp_anton.ui.categories.adapter.CategoriesListAdapter
 import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.data.Constants
-import com.example.recipeapp_anton.data.STUB
 import com.example.recipeapp_anton.databinding.FragmentListCategoriesBinding
+import com.example.recipeapp_anton.model.Category
 import com.example.recipeapp_anton.ui.recipes.recipesList.RecipesListFragment
-
-class CategoryItemClickListener(val clickOnItem: (Int) -> Unit) :
-    CategoriesListAdapter.OnItemClickListener {
-    override fun onItemClick(categoryId: Int) {
-        clickOnItem(categoryId)
-    }
-}
 
 class CategoriesListFragment : Fragment() {
 
@@ -48,30 +40,40 @@ class CategoriesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupCategoryView()
+        parseArguments()
+        setupViews()
+        setupListeners()
+        setupObservers()
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    private fun setupCategoryView() {
+
+    private fun parseArguments() {
         viewModel.loadCategoryList()
+    }
 
+    private fun setupViews() {
         binding.rvCategories.adapter = categoriesListAdapter
+    }
 
-        //listener
-
-        categoriesListAdapter.setOnItemClickListener(CategoryItemClickListener { categoryId ->
+    private fun setupListeners() {
+        categoriesListAdapter.setOnItemClickListener { categoryId ->
             openRecipesByCategoryId(categoryId)
-        })
-
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            categoriesListAdapter.dataSet = state.categoryList
         }
+    }
 
+    private fun setupObservers() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            setRecycleViewData(state.categoryList)
+        }
+    }
+
+    private fun setRecycleViewData(categoryListDataset: List<Category>) {
+        categoriesListAdapter.dataSet = categoryListDataset
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {

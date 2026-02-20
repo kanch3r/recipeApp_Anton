@@ -35,13 +35,13 @@ class RecipeFragment : Fragment() {
 
     private val viewModel: RecipeViewModel by viewModels()
 
-    private var _binding: FragmentRecipeBinding? = null
-
     private val ingredientAdapter: IngredientAdapter = IngredientAdapter()
 
     private val methodAdapter: MethodAdapter = MethodAdapter()
 
     private var recipeId: Int? = null
+
+    private var _binding: FragmentRecipeBinding? = null
 
     private val binding
         get() = _binding
@@ -58,18 +58,10 @@ class RecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        recipeId = requireArguments().getInt(Constants.Bundle.ARG_RECIPE_ID, 0)
-
-        val localRecipeId = recipeId
-
-        if (localRecipeId != null) {
-            viewModel.loadRecipe(localRecipeId)
-        } else {
-            Log.i("Exception", "Recipe ID $recipeId not found")
-        }
-
-        initUI()
+        parseArguments()
+        setupViews()
+        setupListeners()
+        setupObservers()
     }
 
     override fun onDestroyView() {
@@ -77,18 +69,43 @@ class RecipeFragment : Fragment() {
         _binding = null
     }
 
+
+    private fun parseArguments() {
+        recipeId = requireArguments().getInt(Constants.Bundle.ARG_RECIPE_ID, 0)
+        val localRecipeId = recipeId
+        if (localRecipeId != null) {
+            viewModel.loadRecipe(localRecipeId)
+        } else {
+            Log.i("Exception", "Recipe ID $recipeId not found")
+        }
+    }
+
+    private fun setupViews() {
+        setupRecyclerViews()
+    }
+
+    private fun setupListeners() {
+        setupSeekBar(ingredientAdapter)
+        setupFavoriteButtonListener(recipeId)
+    }
+
+    private fun setupObservers() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            setTitleRecipe(state.recipe?.title)
+            setFavoriteIcon(state.isFavorite)
+            setImageRecipe(state.recipeImage)
+            setPortions(state.portions.toString())
+            setupRecycleViewDataSet(
+                state.recipe?.ingredients ?: emptyList(),
+                state.recipe?.method ?: emptyList()
+            )
+        }
+    }
+
     private fun setupRecyclerViews() {
         val divider = createDivider()
         setupIngredients(ingredientAdapter, divider)
         setupMethod(methodAdapter, divider)
-    }
-
-    private fun setupRecycleViewData(
-        ingredientsDataset: List<Ingredient>,
-        methodDataset: List<String>
-    ) {
-        ingredientAdapter.dataSet = ingredientsDataset
-        methodAdapter.dataSet = methodDataset
     }
 
     private fun setupIngredients(
@@ -102,15 +119,6 @@ class RecipeFragment : Fragment() {
         }
     }
 
-    private fun setupSeekBar(ingredientAdapter: IngredientAdapter) {
-        binding.seekBar.setOnSeekBarChangeListener(
-            PortionSeekBarListener { progress ->
-                viewModel.updatePortions(progress)
-                ingredientAdapter.updateIngredients(progress)
-            }
-        )
-    }
-
     private fun setupMethod(
         methodAdapter: MethodAdapter,
         methodDivider: MaterialDividerItemDecoration
@@ -122,6 +130,30 @@ class RecipeFragment : Fragment() {
         }
     }
 
+    private fun setupRecycleViewDataSet(
+        ingredientsDataset: List<Ingredient>,
+        methodDataset: List<String>
+    ) {
+        ingredientAdapter.dataSet = ingredientsDataset
+        methodAdapter.dataSet = methodDataset
+    }
+
+
+    private fun setupSeekBar(ingredientAdapter: IngredientAdapter) {
+        binding.seekBar.setOnSeekBarChangeListener(
+            PortionSeekBarListener { progress ->
+                viewModel.updatePortions(progress)
+                ingredientAdapter.updateIngredients(progress)
+            }
+        )
+    }
+
+    private fun setupFavoriteButtonListener(recipeId: Int?) {
+        binding.ibFavoriteIcon.setOnClickListener {
+            viewModel.onFavoritesClicked(recipeId)
+        }
+    }
+
     private fun createDivider(): MaterialDividerItemDecoration {
         return MaterialDividerItemDecoration(requireContext(), 1).apply {
             dividerInsetStart = resources.getDimensionPixelSize(R.dimen.layout_normal_size)
@@ -129,24 +161,6 @@ class RecipeFragment : Fragment() {
             isLastItemDecorated = false
             setDividerColorResource(requireContext(), R.color.divider_color)
         }
-    }
-
-    private fun initUI() {
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            Log.i("HAPPY", "Here is the value of isFavorite variable:${state.isFavorite}")
-            setTitleRecipe(state.recipe?.title)
-            setFavoriteIcon(state.isFavorite)
-            setImageRecipe(state.recipeImage)
-            setPortions(state.portions.toString())
-            setupRecycleViewData(
-                state.recipe?.ingredients ?: emptyList(),
-                state.recipe?.method ?: emptyList()
-            )
-        }
-
-        setupRecyclerViews()
-        setupSeekBar(ingredientAdapter)
-        setupFavoriteButtonListener(recipeId)
     }
 
     private fun setImageRecipe(drawable: Drawable?) = binding.ivRecipe.setImageDrawable(drawable)
@@ -163,11 +177,5 @@ class RecipeFragment : Fragment() {
 
     private fun setPortions(portions: String) {
         binding.tvPortionQuantity.text = portions
-    }
-
-    private fun setupFavoriteButtonListener(recipeId: Int?) {
-        binding.ibFavoriteIcon.setOnClickListener {
-            viewModel.onFavoritesClicked(recipeId)
-        }
     }
 }
