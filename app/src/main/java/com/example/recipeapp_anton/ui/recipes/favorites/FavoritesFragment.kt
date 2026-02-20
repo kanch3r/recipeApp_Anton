@@ -1,7 +1,6 @@
 package com.example.recipeapp_anton.ui.recipes.favorites
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +9,23 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import com.example.recipeapp_anton.R
-import com.example.recipeapp_anton.ui.recipes.recipesList.adapter.RecipesListAdapter
 import com.example.recipeapp_anton.data.Constants
-import com.example.recipeapp_anton.data.FavoritesSharedPreferences
-import com.example.recipeapp_anton.data.STUB
+import com.example.recipeapp_anton.ui.recipes.recipesList.adapter.RecipesListAdapter
 import com.example.recipeapp_anton.databinding.FragmentFavoritesBinding
+import com.example.recipeapp_anton.model.Recipe
 import com.example.recipeapp_anton.ui.recipes.recipe.RecipeFragment
+import kotlin.getValue
 
 class FavoritesFragment : Fragment() {
+
+    private val viewModel: FavoritesViewModel by viewModels()
+
+    val favoriteListListAdapter: RecipesListAdapter = RecipesListAdapter()
+
     private var _binding: FragmentFavoritesBinding? = null
+
     private val binding
         get() = _binding
             ?: throw IllegalStateException("Binding for FragmentFavoritesBinding in null")
@@ -36,50 +42,57 @@ class FavoritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupFavoriteScreenView()
+        parseArguments()
+        setupViews()
+        setupListeners()
+        setupObservers()
+
     }
 
-
     override fun onDestroyView() {
-
         super.onDestroyView()
         _binding = null
     }
 
-    private fun setupFavoriteScreenView() {
-        val favoritesList = FavoritesSharedPreferences.getFavorites(requireContext())
-            .mapNotNull { it.toIntOrNull() }.toSet()
 
-        if (favoritesList.isEmpty()) {
-            setEmptyState()
-        } else {
-            initRecycler(favoritesList)
+    private fun parseArguments() {
+        viewModel.loadFavoritesRecipesList()
+    }
+
+    private fun setupViews() {
+        binding.rvFavorites.adapter = favoriteListListAdapter
+    }
+
+    private fun setupListeners() {
+        favoriteListListAdapter.setOnItemClickListener { recipeId ->
+            openRecipeByRecipeId(recipeId)
         }
     }
 
-    private fun setEmptyState() {
-        binding.constraintlayoutEmptyFavorites.isVisible = true
-        binding.rvFavorites.isVisible = false
+    private fun setupObservers() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            showOrHideLayout(
+                state.isFavoriteListEmpty,
+                state.isFavoriteListVisible
+            )
+            setRecycleViewData(state.recipeList)
+        }
     }
 
-    private fun initRecycler(favorites: Set<Int>) {
-        val favoriteRecipes = STUB.getRecipesByIds(favorites)
-        val favoriteListListAdapter = RecipesListAdapter(favoriteRecipes)
-        binding.rvFavorites.adapter = favoriteListListAdapter
+    private fun showOrHideLayout(constrainLayoutState: Boolean, rvLayoutState: Boolean) {
+        with(binding) {
+            constraintlayoutEmptyFavorites.isVisible = constrainLayoutState
+            rvFavorites.isVisible = rvLayoutState
+        }
+    }
 
-        favoriteListListAdapter.setOnItemClickListener(object :
-            RecipesListAdapter.OnItemClickListener {
-            override fun onItemClick(recipeId: Int) {
-                openRecipeByRecipeId(recipeId)
-            }
-        })
+    private fun setRecycleViewData(recipeListDataset: List<Recipe>) {
+        favoriteListListAdapter.dataSet = recipeListDataset
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
-        val recipe = STUB.getRecipeById(recipeId)
-        Log.i("Выбор рецепта", "Пользователь выбрал рецепт: ${recipe?.title}")
 
-        val bundle = bundleOf(Constants.Bundle.ARG_RECIPE to recipe)
+        val bundle = bundleOf(Constants.Bundle.ARG_RECIPE_ID to recipeId)
 
         parentFragmentManager.commit {
             setReorderingAllowed(true)

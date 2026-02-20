@@ -1,7 +1,6 @@
 package com.example.recipeapp_anton.ui.categories
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,14 +8,19 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import com.example.recipeapp_anton.ui.categories.adapter.CategoriesListAdapter
 import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.data.Constants
-import com.example.recipeapp_anton.data.STUB
 import com.example.recipeapp_anton.databinding.FragmentListCategoriesBinding
+import com.example.recipeapp_anton.model.Category
 import com.example.recipeapp_anton.ui.recipes.recipesList.RecipesListFragment
 
 class CategoriesListFragment : Fragment() {
+
+    val viewModel: CategoriesListViewModel by viewModels()
+
+    val categoriesListAdapter: CategoriesListAdapter = CategoriesListAdapter()
 
     private var _binding: FragmentListCategoriesBinding? = null
 
@@ -36,7 +40,10 @@ class CategoriesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRecycler()
+        parseArguments()
+        setupViews()
+        setupListeners()
+        setupObservers()
     }
 
     override fun onDestroyView() {
@@ -44,26 +51,35 @@ class CategoriesListFragment : Fragment() {
         _binding = null
     }
 
-    private fun initRecycler() {
-        val categoriesListAdapter = CategoriesListAdapter(STUB.getCategories())
-        binding.rvCategories.adapter = categoriesListAdapter
 
-        categoriesListAdapter.setOnItemClickListener(object :
-            CategoriesListAdapter.OnItemClickListener {
-            override fun onItemClick(categoryId: Int) {
-                openRecipesByCategoryId(categoryId)
-                Log.i("Выбор категории", "Пользователь выбрал: $categoryId")
-            }
-        })
+    private fun parseArguments() {
+        viewModel.loadCategoryList()
+    }
+
+    private fun setupViews() {
+        binding.rvCategories.adapter = categoriesListAdapter
+    }
+
+    private fun setupListeners() {
+        categoriesListAdapter.setOnItemClickListener { categoryId ->
+            openRecipesByCategoryId(categoryId)
+        }
+    }
+
+    private fun setupObservers() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            setRecycleViewData(state.categoryList)
+        }
+    }
+
+    private fun setRecycleViewData(categoryListDataset: List<Category>) {
+        categoriesListAdapter.dataSet = categoryListDataset
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {
-        val category = STUB.getCategories().find { it.id == categoryId } ?: return
-        val bundle = bundleOf(
-            Constants.Bundle.ARG_CATEGORY_ID to category.id,
-            Constants.Bundle.ARG_CATEGORY_NAME to category.title,
-            Constants.Bundle.ARG_CATEGORY_IMAGE_URL to category.imageUrl
-        )
+
+        val bundle = bundleOf(Constants.Bundle.ARG_CATEGORY_ID to categoryId)
+
         parentFragmentManager.commit {
             setReorderingAllowed(true)
             replace<RecipesListFragment>(R.id.mainContainer, args = bundle)
