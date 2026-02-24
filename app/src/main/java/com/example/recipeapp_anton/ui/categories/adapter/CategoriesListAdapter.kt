@@ -14,6 +14,10 @@ import com.example.recipeapp_anton.model.Category
 class CategoriesListAdapter() : RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
 
     var dataSet: List<Category> = emptyList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     var itemClickListener: OnItemClickListener? = null
 
