@@ -11,7 +11,7 @@ import com.example.recipeapp_anton.data.FavoritesSharedPreferences
 import com.example.recipeapp_anton.data.STUB
 import com.example.recipeapp_anton.model.Recipe
 
-data class RecipeState(
+data class RecipeUiState(
     val recipe: Recipe? = null,
     val portions: Int = Constants.DEFAULT_MULTIPLIER,
     val isFavorite: Boolean = false,
@@ -22,8 +22,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     private val appContext = application.applicationContext
 
-    private val _state = MutableLiveData(RecipeState())
-    val state: LiveData<RecipeState> = _state
+    private val _state = MutableLiveData(RecipeUiState())
+    val state: LiveData<RecipeUiState> = _state
 
     init {
         Log.i("HAPPY", "Here is init block execution")

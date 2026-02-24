@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp_anton.databinding.ItemCategoryBinding
 import com.example.recipeapp_anton.model.Category
 
-class CategoriesListAdapter(val dataSet: List<Category>) :
-    RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
+class CategoriesListAdapter() : RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
+
+    var dataSet: List<Category> = emptyList()
 
     var itemClickListener: OnItemClickListener? = null
 
-    interface OnItemClickListener {
+    fun interface OnItemClickListener {
         fun onItemClick(categoryId: Int)
     }
 

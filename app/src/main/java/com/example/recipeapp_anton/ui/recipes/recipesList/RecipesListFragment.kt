@@ -10,20 +10,23 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import androidx.fragment.app.viewModels
 import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.ui.recipes.recipesList.adapter.RecipesListAdapter
 import com.example.recipeapp_anton.data.Constants
-import com.example.recipeapp_anton.data.STUB
 import com.example.recipeapp_anton.databinding.FragmentListRecipesBinding
+import com.example.recipeapp_anton.model.Recipe
 import com.example.recipeapp_anton.ui.recipes.recipe.RecipeFragment
 
 class RecipesListFragment : Fragment() {
-    private var _binding: FragmentListRecipesBinding? = null
+
+    private val viewModel: RecipesListViewModel by viewModels()
+
+    private val recipesListAdapter: RecipesListAdapter = RecipesListAdapter()
 
     private var categoryId: Int? = null
-    private var categoryName: String? = null
-    private var categoryImageUrl: String? = null
 
+    private var _binding: FragmentListRecipesBinding? = null
     private val binding
         get() = _binding
             ?: throw IllegalStateException("Binding for FragmentListRecipesBinding in null")
@@ -39,34 +42,10 @@ class RecipesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        categoryId = requireArguments().getInt(Constants.Bundle.ARG_CATEGORY_ID, 0)
-        categoryName = requireArguments().getString(Constants.Bundle.ARG_CATEGORY_NAME)
-        categoryImageUrl = requireArguments().getString(Constants.Bundle.ARG_CATEGORY_IMAGE_URL)
-
-        initRecycler(categoryId)
-        binding.tvCategories.text = categoryName
-
-        val localImageUrl = categoryImageUrl
-        val drawable = if (localImageUrl != null) {
-            try {
-                view.context.assets
-                    .open(localImageUrl)
-                    .use { inputStream ->
-                        Drawable.createFromStream(inputStream, null)
-                    }
-            } catch (e: Exception) {
-                Log.i("catch exception", "Image not found: $categoryImageUrl")
-                null
-            }
-        } else null
-
-        binding.ivRecipes.setImageDrawable(drawable)
-
-        Log.i(
-            "Результат передачи",
-            "Открываем рецепты категории: ${categoryName ?: "Неизвестная"}"
-        )
+        parseArguments()
+        setupViews()
+        setupListeners()
+        setupObservers()
     }
 
     override fun onDestroyView() {
@@ -74,17 +53,47 @@ class RecipesListFragment : Fragment() {
         _binding = null
     }
 
-    private fun initRecycler(categoryId: Int?) {
-        val recipesListAdapter = RecipesListAdapter(STUB.getRecipesByCategoryId(categoryId))
-        binding.rvRecipes.adapter = recipesListAdapter
 
-        recipesListAdapter.setOnItemClickListener(object :
-            RecipesListAdapter.OnItemClickListener {
-            override fun onItemClick(recipeId: Int) {
-                openRecipeByRecipeId(recipeId)
-                Log.i("Выбор категории", "Пользователь выбрал: $recipeId")
-            }
-        })
+    private fun parseArguments() {
+        categoryId = requireArguments().getInt(Constants.Bundle.ARG_CATEGORY_ID, 0)
+        val localCategoryId = categoryId
+        if (localCategoryId != null) {
+            viewModel.loadRecipesList(localCategoryId)
+        } else {
+            Log.i("Exception", "Recipe ID $categoryId not found")
+        }
+    }
+
+    private fun setupViews() {
+        setupRecyclerView()
+    }
+
+    private fun setupListeners() {
+        recipesListAdapter.setOnItemClickListener { recipeId ->
+            openRecipeByRecipeId(recipeId)
+        }
+    }
+
+    private fun setupObservers() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            setTitleCategory(state.categoryName)
+            setImageCategory(state.categoryImage)
+            setRecycleViewData(state.recipeList)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvRecipes.adapter = recipesListAdapter
+    }
+
+    private fun setRecycleViewData(recipeListDataset: List<Recipe>) {
+        recipesListAdapter.dataSet = recipeListDataset
+    }
+
+    private fun setImageCategory(drawable: Drawable?) = binding.ivRecipes.setImageDrawable(drawable)
+
+    private fun setTitleCategory(categoryName: String?) {
+        binding.tvCategories.text = categoryName
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
