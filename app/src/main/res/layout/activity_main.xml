@@ -7,7 +7,10 @@
     android:background="@color/main_background_color">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/mainContainer"
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/nav_graph"
+        app:defaultNavHost="true"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"

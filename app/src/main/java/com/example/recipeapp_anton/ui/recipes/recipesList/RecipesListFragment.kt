@@ -8,15 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.ui.recipes.recipesList.adapter.RecipesListAdapter
 import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.databinding.FragmentListRecipesBinding
 import com.example.recipeapp_anton.model.Recipe
-import com.example.recipeapp_anton.ui.recipes.recipe.RecipeFragment
 
 class RecipesListFragment : Fragment() {
 
@@ -99,10 +97,6 @@ class RecipesListFragment : Fragment() {
     private fun openRecipeByRecipeId(recipeId: Int) {
 
         val bundle = bundleOf(Constants.Bundle.ARG_RECIPE_ID to recipeId)
-
-        parentFragmentManager.commit {
-            setReorderingAllowed(true)
-            replace<RecipeFragment>(R.id.mainContainer, args = bundle)
-        }
+        findNavController().navigate(R.id.recipeFragment, args = bundle)
     }
 }

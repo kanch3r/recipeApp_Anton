@@ -6,13 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
+import androidx.navigation.findNavController
 import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.databinding.ActivityMainBinding
-import com.example.recipeapp_anton.ui.categories.CategoriesListFragment
-import com.example.recipeapp_anton.ui.recipes.favorites.FavoritesFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -33,25 +29,12 @@ class MainActivity : AppCompatActivity() {
             this, R.color.main_background_color
         )
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                add<CategoriesListFragment>(R.id.mainContainer)
-            }
-        }
-
         binding.btnCategory.setOnClickListener {
-            supportFragmentManager.commit {
-                replace<CategoriesListFragment>(R.id.mainContainer)
-                setReorderingAllowed(true)
-            }
+            findNavController(R.id.nav_host_fragment).navigate(R.id.categoriesListFragment)
         }
 
         binding.btnFavorite.setOnClickListener {
-            supportFragmentManager.commit {
-                replace<FavoritesFragment>(R.id.mainContainer)
-                setReorderingAllowed(true)
-            }
+            findNavController(R.id.nav_host_fragment).navigate(R.id.favoritesFragment)
         }
     }
 }

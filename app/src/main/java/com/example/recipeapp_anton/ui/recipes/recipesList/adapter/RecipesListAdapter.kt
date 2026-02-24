@@ -14,6 +14,10 @@ import com.example.recipeapp_anton.model.Recipe
 class RecipesListAdapter() : RecyclerView.Adapter<RecipesListAdapter.ViewHolder>() {
 
     var dataSet: List<Recipe> = emptyList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     var itemClickListener: OnItemClickListener? = null
 
@@ -28,7 +32,6 @@ class RecipesListAdapter() : RecyclerView.Adapter<RecipesListAdapter.ViewHolder>
     class ViewHolder(binding: ItemRecipeBinding) : RecyclerView.ViewHolder(binding.root) {
         val imageView: ImageView = binding.ivRecipeCard
         val titleTextView: TextView = binding.tvTitleRecipeCard
-
         val cardView: CardView = binding.cvRecipeElement
     }
 
