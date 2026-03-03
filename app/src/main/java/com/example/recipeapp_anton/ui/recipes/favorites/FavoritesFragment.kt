@@ -14,6 +14,7 @@ import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.ui.recipes.recipesList.adapter.RecipesListAdapter
 import com.example.recipeapp_anton.databinding.FragmentFavoritesBinding
 import com.example.recipeapp_anton.model.Recipe
+import com.example.recipeapp_anton.ui.recipes.recipesList.RecipesListFragmentDirections
 import kotlin.getValue
 
 class FavoritesFragment : Fragment() {
@@ -89,7 +90,7 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
-        val bundle = bundleOf(Constants.Bundle.ARG_RECIPE_ID to recipeId)
-        findNavController().navigate(R.id.recipeFragment, args = bundle)
+        val action = FavoritesFragmentDirections.actionFavoritesFragmentToRecipeFragment(recipeId)
+        findNavController().navigate(action)
     }
 }
