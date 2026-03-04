@@ -2,15 +2,14 @@ package com.example.recipeapp_anton.ui.recipes.recipesList
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.recipeapp_anton.ui.recipes.recipesList.adapter.RecipesListAdapter
-import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.databinding.FragmentListRecipesBinding
 import com.example.recipeapp_anton.model.Recipe
 
@@ -20,7 +19,7 @@ class RecipesListFragment : Fragment() {
 
     private val recipesListAdapter: RecipesListAdapter = RecipesListAdapter()
 
-    private var categoryId: Int? = null
+    private val args: RecipesListFragmentArgs by navArgs()
 
     private var _binding: FragmentListRecipesBinding? = null
     private val binding
@@ -51,13 +50,8 @@ class RecipesListFragment : Fragment() {
 
 
     private fun parseArguments() {
-        categoryId = requireArguments().getInt(Constants.Bundle.ARG_CATEGORY_ID, 0)
-        val localCategoryId = categoryId
-        if (localCategoryId != null) {
-            viewModel.loadRecipesList(localCategoryId)
-        } else {
-            Log.i("Exception", "Recipe ID $categoryId not found")
-        }
+        val localCategoryId = args.categoryId
+        viewModel.loadRecipesList(localCategoryId)
     }
 
     private fun setupViews() {
@@ -93,7 +87,8 @@ class RecipesListFragment : Fragment() {
     }
 
     private fun openRecipeByRecipeId(recipeId: Int) {
-        val action = RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
+        val action =
+            RecipesListFragmentDirections.actionRecipesListFragmentToRecipeFragment(recipeId)
         findNavController().navigate(action)
     }
 }
