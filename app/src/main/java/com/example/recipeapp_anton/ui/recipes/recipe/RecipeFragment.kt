@@ -2,17 +2,16 @@ package com.example.recipeapp_anton.ui.recipes.recipe
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.example.recipeapp_anton.ui.recipes.recipe.adapter.IngredientAdapter
 import com.example.recipeapp_anton.ui.recipes.recipe.adapter.MethodAdapter
 import com.example.recipeapp_anton.R
-import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.databinding.FragmentRecipeBinding
 import com.example.recipeapp_anton.model.Ingredient
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -39,7 +38,7 @@ class RecipeFragment : Fragment() {
 
     private val methodAdapter: MethodAdapter = MethodAdapter()
 
-    private var recipeId: Int? = null
+    private val recipeId: RecipeFragmentArgs by navArgs()
 
     private var _binding: FragmentRecipeBinding? = null
 
@@ -71,13 +70,8 @@ class RecipeFragment : Fragment() {
 
 
     private fun parseArguments() {
-        recipeId = requireArguments().getInt(Constants.Bundle.ARG_RECIPE_ID, 0)
-        val localRecipeId = recipeId
-        if (localRecipeId != null) {
-            viewModel.loadRecipe(localRecipeId)
-        } else {
-            Log.i("Exception", "Recipe ID $recipeId not found")
-        }
+        val localRecipeId = recipeId.recipeId
+        viewModel.loadRecipe(localRecipeId)
     }
 
     private fun setupViews() {
@@ -86,7 +80,7 @@ class RecipeFragment : Fragment() {
 
     private fun setupListeners() {
         setupSeekBar(ingredientAdapter)
-        setupFavoriteButtonListener(recipeId)
+        setupFavoriteButtonListener(recipeId.recipeId)
     }
 
     private fun setupObservers() {
