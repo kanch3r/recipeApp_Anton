@@ -50,8 +50,8 @@ class RecipesListFragment : Fragment() {
 
 
     private fun parseArguments() {
-        val localCategoryId = args.categoryId
-        viewModel.loadRecipesList(localCategoryId)
+        val localCategory = args.category
+        viewModel.loadRecipesList(localCategory)
     }
 
     private fun setupViews() {

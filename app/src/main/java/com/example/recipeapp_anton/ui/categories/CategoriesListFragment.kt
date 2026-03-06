@@ -1,6 +1,7 @@
 package com.example.recipeapp_anton.ui.categories
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,10 +73,17 @@ class CategoriesListFragment : Fragment() {
     }
 
     private fun openRecipesByCategoryId(categoryId: Int) {
-        val action =
-            CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipesListFragment2(
-                categoryId
-            )
-        findNavController().navigate(action)
+
+        val category = viewModel.state.value?.categoryList?.find { it.id == categoryId }
+
+        if (category != null) {
+            val action =
+                CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipesListFragment2(
+                    category
+                )
+            findNavController().navigate(action)
+        } else {
+            Log.e("catch exception", "Category not found")
+        }
     }
 }
