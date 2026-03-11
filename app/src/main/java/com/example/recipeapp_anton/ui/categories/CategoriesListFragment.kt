@@ -75,15 +75,12 @@ class CategoriesListFragment : Fragment() {
     private fun openRecipesByCategoryId(categoryId: Int) {
 
         val category = viewModel.state.value?.categoryList?.find { it.id == categoryId }
+            ?: throw IllegalArgumentException("Category not found: $categoryId")
 
-        if (category != null) {
-            val action =
-                CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipesListFragment2(
-                    category
-                )
-            findNavController().navigate(action)
-        } else {
-            Log.e("catch exception", "Category not found")
-        }
+        val action =
+            CategoriesListFragmentDirections.actionCategoriesListFragmentToRecipesListFragment2(
+                category
+            )
+        findNavController().navigate(action)
     }
 }
