@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.recipeapp_anton.data.STUB
+import com.example.recipeapp_anton.model.Category
 import com.example.recipeapp_anton.model.Recipe
 
 data class RecipesListUiState(
@@ -23,24 +24,19 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
 
     val state: LiveData<RecipesListUiState> = _state
 
-    fun loadRecipesList(categoryId: Int) {
+    fun loadRecipesList(category: Category) {
 
-        val recipesList = STUB.getRecipesByCategoryId(categoryId)
-        val category = STUB.getCategories().find { it.id == categoryId }
-        val categoryName = category?.title
-        val categoryImage = category?.imageUrl
-        val drawable = if (categoryImage != null) {
-            try {
-                appContext.assets
-                    .open(categoryImage)
-                    .use { inputStream ->
-                        Drawable.createFromStream(inputStream, null)
-                    }
-            } catch (e: Exception) {
-                Log.e("catch exception", "Image not found: $categoryImage")
-                null
-            }
-        } else {
+        val recipesList = STUB.getRecipesByCategoryId(category.id)
+        val categoryName = category.title
+        val categoryImage = category.imageUrl
+        val drawable = try {
+            appContext.assets
+                .open(categoryImage)
+                .use { inputStream ->
+                    Drawable.createFromStream(inputStream, null)
+                }
+        } catch (e: Exception) {
+            Log.e("catch exception", "Image not found: $categoryImage")
             null
         }
 

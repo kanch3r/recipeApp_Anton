@@ -38,7 +38,7 @@ class RecipeFragment : Fragment() {
 
     private val methodAdapter: MethodAdapter = MethodAdapter()
 
-    private val recipeId: RecipeFragmentArgs by navArgs()
+    private val args: RecipeFragmentArgs by navArgs()
 
     private var _binding: FragmentRecipeBinding? = null
 
@@ -70,7 +70,7 @@ class RecipeFragment : Fragment() {
 
 
     private fun parseArguments() {
-        val localRecipeId = recipeId.recipeId
+        val localRecipeId = args.recipeId
         viewModel.loadRecipe(localRecipeId)
     }
 
@@ -80,7 +80,7 @@ class RecipeFragment : Fragment() {
 
     private fun setupListeners() {
         setupSeekBar(ingredientAdapter)
-        setupFavoriteButtonListener(recipeId.recipeId)
+        setupFavoriteButtonListener(args.recipeId)
     }
 
     private fun setupObservers() {
