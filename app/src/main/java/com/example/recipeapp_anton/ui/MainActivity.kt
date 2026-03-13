@@ -1,6 +1,7 @@
 package com.example.recipeapp_anton.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -9,6 +10,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
 import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.databinding.ActivityMainBinding
+import com.example.recipeapp_anton.model.Category
+import com.google.gson.Gson
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -28,6 +33,33 @@ class MainActivity : AppCompatActivity() {
         window.navigationBarColor = ContextCompat.getColor(
             this, R.color.main_background_color
         )
+
+        val thread = Thread ({
+            val url = URL("https://recipes.androidsprint.ru/api/category")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.connect()
+
+            val jsonBody = connection.inputStream.bufferedReader().readText()
+            val gson = Gson()
+            val result = gson.fromJson(jsonBody, Array<Category>::class.java)
+
+            Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+            Log.i("!!!", "responseCode: ${connection.responseCode}")
+            Log.i("!!!", "responseMessage: ${connection.responseMessage}")
+
+            result.forEach {  category ->
+                Log.i("!!!", "id: ${category.id}")
+                Log.i("!!!", "title: ${category.title}")
+                Log.d("!!!", "description: ${category.description}")
+                Log.d("!!!", "imageUrl: ${category.imageUrl}")
+            }
+
+        }, "поток загрузки экрана Категории")
+
+        thread.start()
+
+        Log.i("!!!", "Метод OnCreate выполняется на потоке: ${thread.name}")
+
 
         binding.btnCategory.setOnClickListener {
             findNavController(R.id.nav_host_fragment).navigate(R.id.categoriesListFragment)
