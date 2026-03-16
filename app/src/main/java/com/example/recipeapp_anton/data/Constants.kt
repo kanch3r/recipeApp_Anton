@@ -2,10 +2,16 @@ package com.example.recipeapp_anton.data
 
 object Constants {
 
+    object NetworkConstants {
+        const val LOG_LEVEL = 3  // 0=NONE, 1=BASIC, 2=HEADERS, 3=BODY
+        const val THREAD_POOL_SIZE = 10
+    }
+
     const val DEFAULT_MULTIPLIER = 1
     const val PAYLOAD_UPDATE_QUANTITY = "update_quantity"
     const val PREFERENCE_FAVORITE_FILE = "favorite_recipes"
     const val PREFERENCE_FAVORITE_RECIPE = "list_of_favorite_recipes"
+
     object Bundle {
         const val ARG_CATEGORY_ID = "category_id"
         const val ARG_CATEGORY_NAME = "category_name"

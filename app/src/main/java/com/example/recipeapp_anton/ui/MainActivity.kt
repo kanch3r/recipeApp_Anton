@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
 import com.example.recipeapp_anton.R
+import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.databinding.ActivityMainBinding
 import com.example.recipeapp_anton.model.Category
 import com.example.recipeapp_anton.model.Recipe
@@ -23,7 +24,24 @@ import java.util.concurrent.Executors
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private val threadPool = Executors.newFixedThreadPool(10)
+    private val threadPool =
+        Executors.newFixedThreadPool(Constants.NetworkConstants.THREAD_POOL_SIZE)
+
+    val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = when (Constants.NetworkConstants.LOG_LEVEL) {
+            0 -> HttpLoggingInterceptor.Level.NONE
+            1 -> HttpLoggingInterceptor.Level.BASIC
+            2 -> HttpLoggingInterceptor.Level.HEADERS
+            3 -> HttpLoggingInterceptor.Level.BODY
+            else -> HttpLoggingInterceptor.Level.NONE
+        }
+    }
+
+    val client: OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .build()
+
+    val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +60,9 @@ class MainActivity : AppCompatActivity() {
         )
 
         threadPool.execute {
+            Log.i("!!!", "--> начало потока: ${Thread.currentThread().name}")
             loadCategories()
+            Log.i("!!!", "--> конец потока: ${Thread.currentThread().name}")
         }
 
         Log.i("!!!", "Метод OnCreate выполняется на потоке: ${Thread.currentThread().name}")
@@ -57,57 +77,54 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadCategories() {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = when (3) {
-                0 -> HttpLoggingInterceptor.Level.NONE
-                1 -> HttpLoggingInterceptor.Level.BASIC
-                2 -> HttpLoggingInterceptor.Level.HEADERS
-                3 -> HttpLoggingInterceptor.Level.BODY
-                else -> HttpLoggingInterceptor.Level.NONE
-            }
-        }
-
-        val client: OkHttpClient = OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .build()
 
         val request: Request = Request.Builder()
             .url("https://recipes.androidsprint.ru/api/category")
             .build()
 
         client.newCall(request).execute().use { response ->
+            try {
+                Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
+                Log.i("!!!", "responseCode: ${response.code}")
+                Log.i("!!!", "responseMessage: ${response.message}")
 
-            Log.i("!!!", "Выполняю запрос на потоке: ${Thread.currentThread().name}")
-            Log.i("!!!", "responseCode: ${response.code}")
-            Log.i("!!!", "responseMessage: ${response.message}")
+                val jsonBody = response.body?.string()
+                val categories = gson.fromJson(jsonBody, Array<Category>::class.java)
+                categories.forEach { category ->
+                    Log.i("!!!", "id: ${category.id}")
+                    Log.i("!!!", "title: ${category.title}")
+                    Log.d("!!!", "description: ${category.description}")
+                    Log.d("!!!", "imageUrl: ${category.imageUrl}")
+                }
 
-            val gson = Gson()
-            val jsonBody = response.body?.string()
-            val categories = gson.fromJson(jsonBody, Array<Category>::class.java)
-            categories.forEach { category ->
-                Log.i("!!!", "id: ${category.id}")
-                Log.i("!!!", "title: ${category.title}")
-                Log.d("!!!", "description: ${category.description}")
-                Log.d("!!!", "imageUrl: ${category.imageUrl}")
-            }
+                val categoryIds = categories.map { it.id }
 
-            val categoryIds = categories.map { it.id }
+                categoryIds.forEach { categoryId ->
 
-            categoryIds.forEach { categoryId ->
+                    threadPool.execute {
+                        Log.i("!!!", "--> начало потока: ${Thread.currentThread().name}")
+                        val request: Request = Request.Builder()
+                            .url("https://recipes.androidsprint.ru/api/category/${categoryId}/recipes")
+                            .build()
 
-                val request: Request = Request.Builder()
-                    .url("https://recipes.androidsprint.ru/api/category/${categoryId}/recipes")
-                    .build()
-
-                client.newCall(request).execute().use { response ->
-                    val jsonBody = response.body?.string()
-                    val categoryRecipes =
-                        gson.fromJson(jsonBody, Array<Recipe>::class.java)
-                    categoryRecipes.forEach { recipe ->
-                        Log.i("!!!", "id: ${recipe.id}")
-                        Log.i("!!!", "title: ${recipe.title}")
+                        client.newCall(request).execute().use { response ->
+                            try {
+                                val jsonBody = response.body?.string()
+                                val categoryRecipes =
+                                    gson.fromJson(jsonBody, Array<Recipe>::class.java)
+                                categoryRecipes.forEach { recipe ->
+                                    Log.i("!!!", "id: ${recipe.id}")
+                                    Log.i("!!!", "title: ${recipe.title}")
+                                }
+                            } catch (e: Exception) {
+                                Log.e("!!!", "Ошибка: ${e.message}")
+                            }
+                        }
+                        Log.i("!!!", "<-- конец потока: ${Thread.currentThread().name}")
                     }
                 }
+            } catch (e: Exception) {
+                Log.e("!!!", "Ошибка: ${e.message}")
             }
         }
     }
