@@ -2,13 +2,16 @@ package com.example.recipeapp_anton.ui.recipes.recipe
 
 import android.app.Application
 import android.graphics.drawable.Drawable
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.data.FavoritesSharedPreferences
-import com.example.recipeapp_anton.data.STUB
+import com.example.recipeapp_anton.data.RecipesRepository
 import com.example.recipeapp_anton.model.Recipe
 
 data class RecipeUiState(
@@ -22,6 +25,10 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     private val appContext = application.applicationContext
 
+    private val repository = RecipesRepository()
+
+    private val mainHandler = Handler(Looper.getMainLooper())
+
     private val _state = MutableLiveData(RecipeUiState())
     val state: LiveData<RecipeUiState> = _state
 
@@ -30,29 +37,39 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun loadRecipe(recipeId: Int) {
-
-        val recipe = STUB.getRecipeById(recipeId)
-        val localImage = recipe?.imageUrl
-        val drawable = if (localImage != null) {
-            try {
-                appContext.assets
-                    .open(recipe.imageUrl)
-                    .use { inputStream ->
-                        Drawable.createFromStream(inputStream, null)
+        repository.getRecipeByRecipeId(recipeId) { recipe ->
+            mainHandler.post {
+                val localImage = recipe?.imageUrl
+                val drawable = if (localImage != null) {
+                    try {
+                        appContext.assets
+                            .open(recipe.imageUrl)
+                            .use { inputStream ->
+                                Drawable.createFromStream(inputStream, null)
+                            }
+                    } catch (e: Exception) {
+                        Log.e("catch exception", "Image not found: $localImage")
+                        null
                     }
-            } catch (e: Exception) {
-                Log.e("catch exception", "Image not found: $localImage")
-                null
-            }
-        } else {
-            null
-        }
+                } else {
+                    null
+                }
 
-        _state.value = _state.value?.copy(
-            recipe = recipe,
-            isFavorite = checkFavoriteStatus(recipeId),
-            recipeImage = drawable
-        )
+                if (recipe != null) {
+                    _state.value = _state.value?.copy(
+                        recipe = recipe,
+                        isFavorite = checkFavoriteStatus(recipeId),
+                        recipeImage = drawable
+                    )
+                } else {
+                    Toast.makeText(
+                        appContext,
+                        "Ошибка получения данных",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     fun updatePortions(newPortions: Int) {

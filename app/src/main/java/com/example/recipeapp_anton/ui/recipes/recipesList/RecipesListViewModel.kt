@@ -2,11 +2,14 @@ package com.example.recipeapp_anton.ui.recipes.recipesList
 
 import android.app.Application
 import android.graphics.drawable.Drawable
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.recipeapp_anton.data.STUB
+import com.example.recipeapp_anton.data.RecipesRepository
 import com.example.recipeapp_anton.model.Category
 import com.example.recipeapp_anton.model.Recipe
 
@@ -20,30 +23,45 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
 
     private val appContext = application.applicationContext
 
+    private val repository = RecipesRepository()
+
+    private val mainHandler = Handler(Looper.getMainLooper())
+
     private val _state = MutableLiveData(RecipesListUiState())
 
     val state: LiveData<RecipesListUiState> = _state
 
     fun loadRecipesList(category: Category) {
 
-        val recipesList = STUB.getRecipesByCategoryId(category.id)
-        val categoryName = category.title
-        val categoryImage = category.imageUrl
-        val drawable = try {
-            appContext.assets
-                .open(categoryImage)
-                .use { inputStream ->
-                    Drawable.createFromStream(inputStream, null)
+        repository.getRecipesByCategoryId(category.id) { recipes ->
+            mainHandler.post {
+                val categoryName = category.title
+                val categoryImage = category.imageUrl
+                val drawable = try {
+                    appContext.assets
+                        .open(categoryImage)
+                        .use { inputStream ->
+                            Drawable.createFromStream(inputStream, null)
+                        }
+                } catch (e: Exception) {
+                    Log.e("catch exception", "Image not found: $categoryImage")
+                    null
                 }
-        } catch (e: Exception) {
-            Log.e("catch exception", "Image not found: $categoryImage")
-            null
-        }
 
-        _state.value = _state.value?.copy(
-            recipeList = recipesList,
-            categoryImage = drawable,
-            categoryName = categoryName,
-        )
+                if (recipes != null) {
+                    _state.value = _state.value?.copy(
+                        recipeList = recipes,
+                        categoryImage = drawable,
+                        categoryName = categoryName,
+                    )
+                } else {
+                    Toast.makeText(
+                        appContext,
+                        "Ошибка получения данных",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 }
