@@ -33,7 +33,8 @@ class CategoriesListViewModel(application: Application) : AndroidViewModel(appli
             mainHandler.post {
                 if (categories != null)
                     _state.value = _state.value?.copy(
-                        categoryList = categories
+                        categoryList = categories,
+                        errorMessage = null
                     ) else {
                     _state.value = _state.value?.copy(
                         errorMessage = appContext.getString(R.string.error_loading_data)
@@ -45,5 +46,10 @@ class CategoriesListViewModel(application: Application) : AndroidViewModel(appli
 
     fun clearErrorMessage() {
         _state.value = _state.value?.copy(errorMessage = null)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.shutdown()
     }
 }

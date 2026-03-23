@@ -116,5 +116,9 @@ class RecipesRepository {
             }
         }
     }
+
+    fun shutdown() {
+        threadPool.shutdown()
+    }
 }
 

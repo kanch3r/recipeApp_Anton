@@ -40,13 +40,15 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
 
                     recipes.isEmpty() -> _state.value = _state.value?.copy(
                         isFavoriteListEmpty = true,
-                        isFavoriteListVisible = false
+                        isFavoriteListVisible = false,
+                        errorMessage = null
                     )
 
                     else -> _state.value = _state.value?.copy(
                         isFavoriteListEmpty = false,
                         isFavoriteListVisible = true,
-                        recipeList = recipes
+                        recipeList = recipes,
+                        errorMessage = null
                     )
                 }
             }
@@ -55,5 +57,10 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun clearErrorMessage() {
         _state.value = _state.value?.copy(errorMessage = null)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.shutdown()
     }
 }

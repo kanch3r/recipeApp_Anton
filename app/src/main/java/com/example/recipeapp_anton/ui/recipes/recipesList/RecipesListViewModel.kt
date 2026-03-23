@@ -54,6 +54,7 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
                         recipeList = recipes,
                         categoryImage = drawable,
                         categoryName = categoryName,
+                        errorMessage = null,
                     )
                 } else {
                     _state.value = _state.value?.copy(
@@ -66,5 +67,10 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
 
     fun clearErrorMessage() {
         _state.value = _state.value?.copy(errorMessage = null)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.shutdown()
     }
 }

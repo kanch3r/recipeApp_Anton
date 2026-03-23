@@ -60,7 +60,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                     _state.value = _state.value?.copy(
                         recipe = recipe,
                         isFavorite = checkFavoriteStatus(recipeId),
-                        recipeImage = drawable
+                        recipeImage = drawable,
+                        errorMessage = null,
                     )
                 } else {
                     _state.value = _state.value?.copy(
@@ -96,5 +97,10 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun clearErrorMessage() {
         _state.value = _state.value?.copy(errorMessage = null)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.shutdown()
     }
 }
