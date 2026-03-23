@@ -5,10 +5,10 @@ import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.data.FavoritesSharedPreferences
 import com.example.recipeapp_anton.data.RecipesRepository
@@ -18,7 +18,8 @@ data class RecipeUiState(
     val recipe: Recipe? = null,
     val portions: Int = Constants.DEFAULT_MULTIPLIER,
     val isFavorite: Boolean = false,
-    val recipeImage: Drawable? = null
+    val recipeImage: Drawable? = null,
+    val errorMessage: String? = null,
 )
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
@@ -62,11 +63,9 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                         recipeImage = drawable
                     )
                 } else {
-                    Toast.makeText(
-                        appContext,
-                        "Ошибка получения данных",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    _state.value = _state.value?.copy(
+                        errorMessage = appContext.getString(R.string.error_loading_data)
+                    )
                 }
             }
         }
@@ -93,5 +92,9 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
             _state.value = _state.value?.copy(isFavorite = true)
         }
         FavoritesSharedPreferences.saveFavorite(appContext, favoriteList)
+    }
+
+    fun clearErrorMessage() {
+        _state.value = _state.value?.copy(errorMessage = null)
     }
 }

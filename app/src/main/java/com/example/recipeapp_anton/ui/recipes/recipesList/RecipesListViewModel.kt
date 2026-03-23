@@ -5,10 +5,10 @@ import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.data.RecipesRepository
 import com.example.recipeapp_anton.model.Category
 import com.example.recipeapp_anton.model.Recipe
@@ -17,6 +17,7 @@ data class RecipesListUiState(
     val recipeList: List<Recipe> = emptyList(),
     val categoryImage: Drawable? = null,
     val categoryName: String? = "",
+    val errorMessage: String? = null,
 )
 
 class RecipesListViewModel(application: Application) : AndroidViewModel(application) {
@@ -55,13 +56,15 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
                         categoryName = categoryName,
                     )
                 } else {
-                    Toast.makeText(
-                        appContext,
-                        "Ошибка получения данных",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    _state.value = _state.value?.copy(
+                        errorMessage = appContext.getString(R.string.error_loading_data)
+                    )
                 }
             }
         }
+    }
+
+    fun clearErrorMessage() {
+        _state.value = _state.value?.copy(errorMessage = null)
     }
 }

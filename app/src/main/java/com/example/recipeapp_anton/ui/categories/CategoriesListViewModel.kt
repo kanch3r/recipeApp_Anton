@@ -3,15 +3,16 @@ package com.example.recipeapp_anton.ui.categories
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.data.RecipesRepository
 import com.example.recipeapp_anton.model.Category
 
 data class CategoriesListUiState(
     val categoryList: List<Category> = emptyList(),
+    val errorMessage: String? = null,
 )
 
 class CategoriesListViewModel(application: Application) : AndroidViewModel(application) {
@@ -34,13 +35,15 @@ class CategoriesListViewModel(application: Application) : AndroidViewModel(appli
                     _state.value = _state.value?.copy(
                         categoryList = categories
                     ) else {
-                    Toast.makeText(
-                        appContext,
-                        "Ошибка получения данных",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    _state.value = _state.value?.copy(
+                        errorMessage = appContext.getString(R.string.error_loading_data)
+                    )
                 }
             }
         }
+    }
+
+    fun clearErrorMessage() {
+        _state.value = _state.value?.copy(errorMessage = null)
     }
 }

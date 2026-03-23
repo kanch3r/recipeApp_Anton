@@ -19,7 +19,7 @@ class RecipesRepository {
 
     private val prefs = FavoritesSharedPreferences
 
-    val loggingInterceptor = HttpLoggingInterceptor().apply {
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = when (Constants.NetworkConstants.LOG_LEVEL) {
             0 -> HttpLoggingInterceptor.Level.NONE
             1 -> HttpLoggingInterceptor.Level.BASIC
@@ -29,18 +29,18 @@ class RecipesRepository {
         }
     }
 
-    val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+    private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .build()
 
-    val contentType = "application/json".toMediaType()
-    val retrofit = Retrofit.Builder()
+    private val contentType = "application/json".toMediaType()
+    private val retrofit = Retrofit.Builder()
         .baseUrl("https://recipes.androidsprint.ru/api/")
         .client(okHttpClient)
         .addConverterFactory(Json.asConverterFactory(contentType))
         .build()
 
-    val recipesApiService: RecipeApiService = retrofit.create(RecipeApiService::class.java)
+    private val recipesApiService: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
     fun getCategories(callback: (List<Category>?) -> Unit) {
         threadPool.execute {
