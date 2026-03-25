@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -93,6 +94,10 @@ class RecipeFragment : Fragment() {
                 state.recipe?.ingredients ?: emptyList(),
                 state.recipe?.method ?: emptyList()
             )
+            state.errorMessage?.let { errorMessage ->
+                showToast(errorMessage)
+                viewModel.clearErrorMessage()
+            }
         }
     }
 
@@ -171,5 +176,9 @@ class RecipeFragment : Fragment() {
 
     private fun setPortions(portions: String) {
         binding.tvPortionQuantity.text = portions
+    }
+
+    private fun showToast(message: String?) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

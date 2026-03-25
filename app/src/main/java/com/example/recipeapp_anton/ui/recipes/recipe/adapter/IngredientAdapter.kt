@@ -12,6 +12,10 @@ import com.example.recipeapp_anton.model.Ingredient
 class IngredientAdapter() : RecyclerView.Adapter<IngredientAdapter.ViewHolder>() {
 
     var dataSet: List<Ingredient> = emptyList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     private var multiplier: Int = Constants.DEFAULT_MULTIPLIER
 

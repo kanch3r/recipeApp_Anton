@@ -9,6 +9,10 @@ import com.example.recipeapp_anton.databinding.MethodRecipeBinding
 class MethodAdapter() : RecyclerView.Adapter<MethodAdapter.ViewHolder>() {
 
     var dataSet: List<String> = emptyList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     class ViewHolder(binding: MethodRecipeBinding) : RecyclerView.ViewHolder(binding.root) {
         val textView: TextView = binding.tvMethodDescription
