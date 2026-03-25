@@ -1,21 +1,20 @@
 package com.example.recipeapp_anton.ui.recipes.recipesList
 
 import android.app.Application
-import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.recipeapp_anton.R
+import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.data.RecipesRepository
 import com.example.recipeapp_anton.model.Category
 import com.example.recipeapp_anton.model.Recipe
 
 data class RecipesListUiState(
     val recipeList: List<Recipe> = emptyList(),
-    val categoryImage: Drawable? = null,
+    val categoryImageUrl: String? = null,
     val categoryName: String? = "",
     val errorMessage: String? = null,
 )
@@ -37,22 +36,12 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
         repository.getRecipesByCategoryId(category.id) { recipes ->
             mainHandler.post {
                 val categoryName = category.title
-                val categoryImage = category.imageUrl
-                val drawable = try {
-                    appContext.assets
-                        .open(categoryImage)
-                        .use { inputStream ->
-                            Drawable.createFromStream(inputStream, null)
-                        }
-                } catch (e: Exception) {
-                    Log.e("catch exception", "Image not found: $categoryImage")
-                    null
-                }
+                val categoryImageUrl = Constants.ApiConstants.BASE_URL_IMAGES + category.imageUrl
 
                 if (recipes != null) {
                     _state.value = _state.value?.copy(
                         recipeList = recipes,
-                        categoryImage = drawable,
+                        categoryImageUrl = categoryImageUrl,
                         categoryName = categoryName,
                         errorMessage = null,
                     )

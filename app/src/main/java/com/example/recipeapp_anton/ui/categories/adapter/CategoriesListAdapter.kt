@@ -1,6 +1,5 @@
 package com.example.recipeapp_anton.ui.categories.adapter
 
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.recipeapp_anton.R
+import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.databinding.ItemCategoryBinding
 import com.example.recipeapp_anton.model.Category
 
@@ -48,17 +50,17 @@ class CategoriesListAdapter() : RecyclerView.Adapter<CategoriesListAdapter.ViewH
         viewHolder.titleTextView.text = category.title
         viewHolder.descriptionTextView.text = category.description
 
-        val drawable = try {
-            viewHolder.itemView.context.assets
-                .open(category.imageUrl)
-                .use { inputStream ->
-                    Drawable.createFromStream(inputStream, null)
-                }
+        val fullImageUrl = Constants.ApiConstants.BASE_URL_IMAGES + category.imageUrl
+
+        try {
+            Glide.with(viewHolder.imageView)
+                .load(fullImageUrl)
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
+                .into(viewHolder.imageView)
         } catch (e: Exception) {
             Log.i("catch exception", "Image not found: ${category.imageUrl}")
-            null
         }
-        viewHolder.imageView.setImageDrawable(drawable)
 
         viewHolder.cardView.setOnClickListener {
             itemClickListener?.onItemClick(category.id)
