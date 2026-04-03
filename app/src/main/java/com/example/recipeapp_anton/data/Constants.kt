@@ -7,6 +7,11 @@ object Constants {
         const val THREAD_POOL_SIZE = 10
     }
 
+    object ApiConstants {
+        const val BASE_URL_IMAGES = "https://recipes.androidsprint.ru/api/images/"
+        const val BASE_URL = "https://recipes.androidsprint.ru/api/"
+    }
+
     const val DEFAULT_MULTIPLIER = 1
     const val PAYLOAD_UPDATE_QUANTITY = "update_quantity"
     const val PREFERENCE_FAVORITE_FILE = "favorite_recipes"

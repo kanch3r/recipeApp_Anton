@@ -1,7 +1,7 @@
 package com.example.recipeapp_anton.ui.recipes.recipesList
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.ui.recipes.recipesList.adapter.RecipesListAdapter
 import com.example.recipeapp_anton.databinding.FragmentListRecipesBinding
 import com.example.recipeapp_anton.model.Recipe
@@ -68,7 +70,7 @@ class RecipesListFragment : Fragment() {
     private fun setupObservers() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             setTitleCategory(state.categoryName)
-            setImageCategory(state.categoryImage)
+            setImageCategory(state.categoryImageUrl)
             setRecycleViewData(state.recipeList)
             state.errorMessage?.let { errorMessage ->
                 showToast(errorMessage)
@@ -85,7 +87,17 @@ class RecipesListFragment : Fragment() {
         recipesListAdapter.dataSet = recipeListDataset
     }
 
-    private fun setImageCategory(drawable: Drawable?) = binding.ivRecipes.setImageDrawable(drawable)
+    private fun setImageCategory(recipeImage: String?) {
+        try {
+            Glide.with(requireContext())
+                .load(recipeImage)
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
+                .into(binding.ivRecipes)
+        } catch (e: Exception) {
+            Log.i("catch exception", "Image not found: $recipeImage")
+        }
+    }
 
     private fun setTitleCategory(categoryName: String?) {
         binding.tvCategories.text = categoryName

@@ -1,7 +1,7 @@
 package com.example.recipeapp_anton.ui.recipes.recipe
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.recipeapp_anton.ui.recipes.recipe.adapter.IngredientAdapter
 import com.example.recipeapp_anton.ui.recipes.recipe.adapter.MethodAdapter
 import com.example.recipeapp_anton.R
@@ -88,7 +89,7 @@ class RecipeFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             setTitleRecipe(state.recipe?.title)
             setFavoriteIcon(state.isFavorite)
-            setImageRecipe(state.recipeImage)
+            setImageRecipe(state.recipeImageUrl)
             setPortions(state.portions.toString())
             setupRecycleViewDataSet(
                 state.recipe?.ingredients ?: emptyList(),
@@ -162,7 +163,17 @@ class RecipeFragment : Fragment() {
         }
     }
 
-    private fun setImageRecipe(drawable: Drawable?) = binding.ivRecipe.setImageDrawable(drawable)
+    private fun setImageRecipe(recipeImage: String?) {
+        try {
+            Glide.with(requireContext())
+                .load(recipeImage)
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
+                .into(binding.ivRecipe)
+        } catch (e: Exception) {
+            Log.i("catch exception", "Image not found: $recipeImage")
+        }
+    }
 
     private fun setFavoriteIcon(isFavorite: Boolean) {
         val favIcon =

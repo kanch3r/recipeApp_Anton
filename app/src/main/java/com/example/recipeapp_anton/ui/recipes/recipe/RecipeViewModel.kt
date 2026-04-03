@@ -1,7 +1,6 @@
 package com.example.recipeapp_anton.ui.recipes.recipe
 
 import android.app.Application
-import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -18,7 +17,7 @@ data class RecipeUiState(
     val recipe: Recipe? = null,
     val portions: Int = Constants.DEFAULT_MULTIPLIER,
     val isFavorite: Boolean = false,
-    val recipeImage: Drawable? = null,
+    val recipeImageUrl: String? = null,
     val errorMessage: String? = null,
 )
 
@@ -40,27 +39,13 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     fun loadRecipe(recipeId: Int) {
         repository.getRecipeByRecipeId(recipeId) { recipe ->
             mainHandler.post {
-                val localImage = recipe?.imageUrl
-                val drawable = if (localImage != null) {
-                    try {
-                        appContext.assets
-                            .open(recipe.imageUrl)
-                            .use { inputStream ->
-                                Drawable.createFromStream(inputStream, null)
-                            }
-                    } catch (e: Exception) {
-                        Log.e("catch exception", "Image not found: $localImage")
-                        null
-                    }
-                } else {
-                    null
-                }
+                val recipeImageUrl = Constants.ApiConstants.BASE_URL_IMAGES + recipe?.imageUrl
 
                 if (recipe != null) {
                     _state.value = _state.value?.copy(
                         recipe = recipe,
                         isFavorite = checkFavoriteStatus(recipeId),
-                        recipeImage = drawable,
+                        recipeImageUrl = recipeImageUrl,
                         errorMessage = null,
                     )
                 } else {
