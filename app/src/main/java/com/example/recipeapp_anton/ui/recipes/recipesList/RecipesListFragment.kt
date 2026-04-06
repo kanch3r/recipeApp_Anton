@@ -88,15 +88,11 @@ class RecipesListFragment : Fragment() {
     }
 
     private fun setImageCategory(recipeImage: String?) {
-        try {
-            Glide.with(requireContext())
-                .load(recipeImage)
-                .placeholder(R.drawable.img_placeholder)
-                .error(R.drawable.img_error)
-                .into(binding.ivRecipes)
-        } catch (e: Exception) {
-            Log.i("catch exception", "Image not found: $recipeImage")
-        }
+        Glide.with(requireContext())
+            .load(recipeImage)
+            .placeholder(R.drawable.img_placeholder)
+            .error(R.drawable.img_error)
+            .into(binding.ivRecipes)
     }
 
     private fun setTitleCategory(categoryName: String?) {

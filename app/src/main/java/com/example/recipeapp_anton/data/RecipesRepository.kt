@@ -5,17 +5,15 @@ import android.util.Log
 import com.example.recipeapp_anton.model.Category
 import com.example.recipeapp_anton.model.Recipe
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import java.util.concurrent.Executors
 
 class RecipesRepository {
-
-    private val threadPool =
-        Executors.newFixedThreadPool(Constants.NetworkConstants.THREAD_POOL_SIZE)
 
     private val prefs = FavoritesSharedPreferences
 
@@ -42,83 +40,67 @@ class RecipesRepository {
 
     private val recipesApiService: RecipeApiService = retrofit.create(RecipeApiService::class.java)
 
-    fun getCategories(callback: (List<Category>?) -> Unit) {
-        threadPool.execute {
-            Log.i("!!!", "начал загрузку категорий")
-            try {
-                val response = recipesApiService.getCategories().execute()
-                val result = if (response.isSuccessful) response.body() else null
-                callback(result)
-                Log.i("!!!", "закончил загрузку категорий. Результат: $result")
-            } catch (e: Exception) {
-                callback(null)
-                Log.i("!!!", "закончил загрузку категорий. Результат: null через Exception")
-            }
+    suspend fun getCategories(): List<Category>? = withContext(Dispatchers.IO) {
+        Log.i("!!!", "начал загрузку категорий")
+        try {
+            val response = recipesApiService.getCategories().execute()
+            val result = if (response.isSuccessful) response.body() else null
+            Log.i("!!!", "закончил загрузку категорий. Результат: $result")
+            result
+        } catch (e: Exception) {
+            Log.i("!!!", "закончил загрузку категорий. Результат: null через Exception")
+            null
         }
     }
 
-    fun getRecipesByCategoryId(categoryId: Int, callback: (List<Recipe>?) -> Unit) {
-        threadPool.execute {
+    suspend fun getRecipesByCategoryId(categoryId: Int): List<Recipe>? =
+        withContext(Dispatchers.IO) {
             Log.i("!!!", "начал загрузку рецептов")
             try {
                 val response = recipesApiService.getRecipesByCategoryId(categoryId).execute()
                 val result = if (response.isSuccessful) response.body() else null
-                callback(result)
                 Log.i("!!!", "закончил загрузку рецептов. Результат: $result")
+                result
             } catch (e: Exception) {
-                callback(null)
                 Log.i("!!!", "закончил загрузку рецептов. Результат: null через Exception")
+                null
             }
+        }
+
+    suspend fun getRecipeByRecipeId(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
+        Log.i("!!!", "начал загрузку рецепта")
+        try {
+            val response = recipesApiService.getRecipeByRecipeId(recipeId).execute()
+            val result = if (response.isSuccessful) response.body() else null
+            Log.i("!!!", "закончил загрузку рецепта. Результат: $result")
+            result
+        } catch (e: Exception) {
+            Log.i("!!!", "закончил загрузку рецепта. Результат: null через Exception")
+            null
         }
     }
 
-    fun getRecipeByRecipeId(recipeId: Int, callback: (Recipe?) -> Unit) {
-        threadPool.execute {
-            Log.i("!!!", "начал загрузку рецепта")
+    suspend fun getRecipes(appContext: Context): List<Recipe>? = withContext(Dispatchers.IO) {
+        Log.i("!!!", "начал загрузку избранного")
+        val favoritesList = prefs.getFavorites(appContext).joinToString(",")
+        Log.i("!!!", "ID в избранном: $favoritesList")
+
+        if (favoritesList.isEmpty()) {
+            emptyList()
+        } else {
             try {
-                val response = recipesApiService.getRecipeByRecipeId(recipeId).execute()
+                val response = recipesApiService.getRecipes(favoritesList).execute()
                 val result = if (response.isSuccessful) response.body() else null
-                callback(result)
-                Log.i("!!!", "закончил загрузку рецепта. Результат: $result")
+                Log.i("!!!", "закончил загрузку рецептов по ID. Результат: $result")
+                result
             } catch (e: Exception) {
-                callback(null)
-                Log.i("!!!", "закончил загрузку рецепта. Результат: null через Exception")
+                Log.i(
+                    "!!!",
+                    "закончил загрузку рецептов по ID. Результат: null через Exception"
+                )
+                null
             }
         }
-    }
-
-    fun getRecipes(appContext: Context, callback: (List<Recipe>?) -> Unit) {
-        threadPool.execute {
-            Log.i("!!!", "начал загрузку избранного")
-            val favoritesList = prefs.getFavorites(appContext)
-                .joinToString(",")
-
-            Log.i("!!!", "ID в избранном: $favoritesList")
-
-            if (favoritesList.isEmpty()) {
-                callback(emptyList())
-            } else {
-                try {
-                    val response = recipesApiService.getRecipes(favoritesList).execute()
-
-                    Log.i("!!!", "URL запроса: ${response.raw().request.url}")
-
-                    val result = if (response.isSuccessful) response.body() else null
-                    callback(result)
-                    Log.i("!!!", "закончил загрузку рецептов по ID. Результат: $result")
-                } catch (e: Exception) {
-                    callback(null)
-                    Log.i(
-                        "!!!",
-                        "закончил загрузку рецептов по ID. Результат: null через Exception"
-                    )
-                }
-            }
-        }
-    }
-
-    fun shutdown() {
-        threadPool.shutdown()
     }
 }
 

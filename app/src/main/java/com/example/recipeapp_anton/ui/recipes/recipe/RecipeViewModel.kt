@@ -1,17 +1,17 @@
 package com.example.recipeapp_anton.ui.recipes.recipe
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.data.Constants
 import com.example.recipeapp_anton.data.FavoritesSharedPreferences
 import com.example.recipeapp_anton.data.RecipesRepository
 import com.example.recipeapp_anton.model.Recipe
+import kotlinx.coroutines.launch
 
 data class RecipeUiState(
     val recipe: Recipe? = null,
@@ -27,32 +27,26 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     private val repository = RecipesRepository()
 
-    private val mainHandler = Handler(Looper.getMainLooper())
-
     private val _state = MutableLiveData(RecipeUiState())
+
     val state: LiveData<RecipeUiState> = _state
 
-    init {
-        Log.i("HAPPY", "Here is init block execution")
-    }
-
     fun loadRecipe(recipeId: Int) {
-        repository.getRecipeByRecipeId(recipeId) { recipe ->
-            mainHandler.post {
-                val recipeImageUrl = Constants.ApiConstants.BASE_URL_IMAGES + recipe?.imageUrl
+        viewModelScope.launch {
+            val recipe = repository.getRecipeByRecipeId(recipeId)
+            val recipeImageUrl = Constants.ApiConstants.BASE_URL_IMAGES + recipe?.imageUrl
 
-                if (recipe != null) {
-                    _state.value = _state.value?.copy(
-                        recipe = recipe,
-                        isFavorite = checkFavoriteStatus(recipeId),
-                        recipeImageUrl = recipeImageUrl,
-                        errorMessage = null,
-                    )
-                } else {
-                    _state.value = _state.value?.copy(
-                        errorMessage = appContext.getString(R.string.error_loading_data)
-                    )
-                }
+            if (recipe != null) {
+                _state.value = _state.value?.copy(
+                    recipe = recipe,
+                    isFavorite = checkFavoriteStatus(recipeId),
+                    recipeImageUrl = recipeImageUrl,
+                    errorMessage = null,
+                )
+            } else {
+                _state.value = _state.value?.copy(
+                    errorMessage = appContext.getString(R.string.error_loading_data)
+                )
             }
         }
     }
@@ -82,10 +76,5 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun clearErrorMessage() {
         _state.value = _state.value?.copy(errorMessage = null)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        repository.shutdown()
     }
 }
