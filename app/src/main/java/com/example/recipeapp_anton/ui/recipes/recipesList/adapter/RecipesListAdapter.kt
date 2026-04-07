@@ -48,19 +48,13 @@ class RecipesListAdapter() : RecyclerView.Adapter<RecipesListAdapter.ViewHolder>
 
         viewHolder.titleTextView.text = recipe.title
 
-        Log.i("Recipe Image URL", "Relative path: ${recipe.imageUrl}")
-
         val fullImageUrl = Constants.ApiConstants.BASE_URL_IMAGES + recipe.imageUrl
 
-        try {
-            Glide.with(viewHolder.imageView)
-                .load(fullImageUrl)
-                .placeholder(R.drawable.img_placeholder)
-                .error(R.drawable.img_error)
-                .into(viewHolder.imageView)
-        } catch (e: Exception) {
-            Log.i("catch exception", "Image not found: ${recipe.imageUrl}")
-        }
+        Glide.with(viewHolder.imageView)
+            .load(fullImageUrl)
+            .placeholder(R.drawable.img_placeholder)
+            .error(R.drawable.img_error)
+            .into(viewHolder.imageView)
 
         viewHolder.cardView.setOnClickListener {
             itemClickListener?.onItemClick(recipe.id)

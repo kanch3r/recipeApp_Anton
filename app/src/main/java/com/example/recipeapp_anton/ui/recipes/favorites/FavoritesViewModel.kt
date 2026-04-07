@@ -1,14 +1,14 @@
 package com.example.recipeapp_anton.ui.recipes.favorites
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.data.RecipesRepository
 import com.example.recipeapp_anton.model.Recipe
+import kotlinx.coroutines.launch
 
 data class FavoritesUiState(
     val recipeList: List<Recipe> = emptyList(),
@@ -23,44 +23,35 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val repository = RecipesRepository()
 
-    private val mainHandler = Handler(Looper.getMainLooper())
-
     private val _state = MutableLiveData(FavoritesUiState())
 
     val state: LiveData<FavoritesUiState> = _state
 
     fun loadFavoritesRecipesList() {
+        viewModelScope.launch {
+            val recipes = repository.getRecipes(appContext)
+            when {
+                recipes == null -> _state.value = _state.value?.copy(
+                    errorMessage = appContext.getString(R.string.error_loading_data)
+                )
 
-        repository.getRecipes(appContext) { recipes ->
-            mainHandler.post {
-                when {
-                    recipes == null -> _state.value = _state.value?.copy(
-                        errorMessage = appContext.getString(R.string.error_loading_data)
-                    )
+                recipes.isEmpty() -> _state.value = _state.value?.copy(
+                    isFavoriteListEmpty = true,
+                    isFavoriteListVisible = false,
+                    errorMessage = null
+                )
 
-                    recipes.isEmpty() -> _state.value = _state.value?.copy(
-                        isFavoriteListEmpty = true,
-                        isFavoriteListVisible = false,
-                        errorMessage = null
-                    )
-
-                    else -> _state.value = _state.value?.copy(
-                        isFavoriteListEmpty = false,
-                        isFavoriteListVisible = true,
-                        recipeList = recipes,
-                        errorMessage = null
-                    )
-                }
+                else -> _state.value = _state.value?.copy(
+                    isFavoriteListEmpty = false,
+                    isFavoriteListVisible = true,
+                    recipeList = recipes,
+                    errorMessage = null
+                )
             }
         }
     }
 
     fun clearErrorMessage() {
         _state.value = _state.value?.copy(errorMessage = null)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        repository.shutdown()
     }
 }

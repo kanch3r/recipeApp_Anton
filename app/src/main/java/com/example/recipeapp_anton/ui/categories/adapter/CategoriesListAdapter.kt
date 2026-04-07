@@ -52,15 +52,11 @@ class CategoriesListAdapter() : RecyclerView.Adapter<CategoriesListAdapter.ViewH
 
         val fullImageUrl = Constants.ApiConstants.BASE_URL_IMAGES + category.imageUrl
 
-        try {
-            Glide.with(viewHolder.imageView)
-                .load(fullImageUrl)
-                .placeholder(R.drawable.img_placeholder)
-                .error(R.drawable.img_error)
-                .into(viewHolder.imageView)
-        } catch (e: Exception) {
-            Log.i("catch exception", "Image not found: ${category.imageUrl}")
-        }
+        Glide.with(viewHolder.imageView)
+            .load(fullImageUrl)
+            .placeholder(R.drawable.img_placeholder)
+            .error(R.drawable.img_error)
+            .into(viewHolder.imageView)
 
         viewHolder.cardView.setOnClickListener {
             itemClickListener?.onItemClick(category.id)
