@@ -2,6 +2,10 @@ package com.example.recipeapp_anton.data
 
 object Constants {
 
+    object DatabaseConstants {
+        const val DATABASE_NAME = "recipeAppDatabase"
+    }
+
     object NetworkConstants {
         const val LOG_LEVEL = 3  // 0=NONE, 1=BASIC, 2=HEADERS, 3=BODY
         const val THREAD_POOL_SIZE = 10
