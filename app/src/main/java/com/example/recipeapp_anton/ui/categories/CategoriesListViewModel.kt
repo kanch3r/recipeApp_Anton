@@ -19,7 +19,7 @@ class CategoriesListViewModel(application: Application) : AndroidViewModel(appli
 
     private val appContext = application.applicationContext
 
-    private val repository = RecipesRepository()
+    private val repository = RecipesRepository(application)
 
     private val _state = MutableLiveData(CategoriesListUiState())
 
@@ -27,12 +27,22 @@ class CategoriesListViewModel(application: Application) : AndroidViewModel(appli
 
     fun loadCategoryList() {
         viewModelScope.launch {
-            val categories = repository.getCategories()
-            if (categories != null)
+            val cachedCategories = repository.getCategoriesFromCache()
+            if (cachedCategories.isNotEmpty()) {
                 _state.value = _state.value?.copy(
-                    categoryList = categories,
+                    categoryList = cachedCategories,
                     errorMessage = null
-                ) else {
+                )
+            }
+
+            val categoriesFromNet = repository.getCategories()
+            if (categoriesFromNet != null) {
+                _state.value = _state.value?.copy(
+                    categoryList = categoriesFromNet,
+                    errorMessage = null
+                )
+                repository.saveToDatabase(categoriesFromNet)
+            } else {
                 _state.value = _state.value?.copy(
                     errorMessage = appContext.getString(R.string.error_loading_data)
                 )

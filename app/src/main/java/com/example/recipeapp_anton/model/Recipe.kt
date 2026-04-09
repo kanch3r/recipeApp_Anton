@@ -1,10 +1,7 @@
 package com.example.recipeapp_anton.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class Recipe(
     val id: Int,
@@ -12,4 +9,4 @@ data class Recipe(
     val ingredients: List<Ingredient>,
     val method: List<String>,
     val imageUrl: String,
-) : Parcelable
+)

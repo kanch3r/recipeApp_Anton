@@ -1,7 +1,11 @@
 package com.example.recipeapp_anton.data
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.room.Room
+import com.example.recipeapp_anton.data.database.AppDatabase
+import com.example.recipeapp_anton.model.CategoriesDao
 import com.example.recipeapp_anton.model.Category
 import com.example.recipeapp_anton.model.Recipe
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -13,7 +17,15 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
-class RecipesRepository {
+class RecipesRepository(private val application: Application) {
+
+    private var appDatabase: AppDatabase = Room.databaseBuilder(
+        application,
+        AppDatabase::class.java,
+        Constants.DatabaseConstants.DATABASE_NAME
+    ).build()
+
+    private var categoriesDao: CategoriesDao = appDatabase.categoriesDao()
 
     private val prefs = FavoritesSharedPreferences
 
@@ -102,5 +114,10 @@ class RecipesRepository {
             }
         }
     }
+
+    suspend fun getCategoriesFromCache() = categoriesDao.getAllCategories()
+
+    suspend fun saveToDatabase(categories: List<Category>) =
+        categoriesDao.insertOrReplace(categories)
 }
 

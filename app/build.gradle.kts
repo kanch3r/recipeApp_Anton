@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-parcelize")
     alias(libs.plugins.navigation.safeargs)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
@@ -71,4 +72,5 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+    implementation("org.jetbrains.kotlin:kotlin-parcelize-runtime:2.0.21")
 }
