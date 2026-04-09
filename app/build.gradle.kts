@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.navigation.safeargs)
     alias(libs.plugins.kotlin.serialization)
-    id("kotlin-parcelize")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -68,4 +68,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 }
