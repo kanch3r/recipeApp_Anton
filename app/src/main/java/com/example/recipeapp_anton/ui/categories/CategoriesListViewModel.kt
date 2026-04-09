@@ -41,7 +41,7 @@ class CategoriesListViewModel(application: Application) : AndroidViewModel(appli
                     categoryList = categoriesFromNet,
                     errorMessage = null
                 )
-                repository.saveToDatabase(categoriesFromNet)
+                repository.saveCategoriesToDatabase(categoriesFromNet)
             } else {
                 _state.value = _state.value?.copy(
                     errorMessage = appContext.getString(R.string.error_loading_data)

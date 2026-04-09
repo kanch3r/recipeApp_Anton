@@ -8,6 +8,7 @@ import com.example.recipeapp_anton.data.database.AppDatabase
 import com.example.recipeapp_anton.model.CategoriesDao
 import com.example.recipeapp_anton.model.Category
 import com.example.recipeapp_anton.model.Recipe
+import com.example.recipeapp_anton.model.RecipesDao
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,10 +23,12 @@ class RecipesRepository(private val application: Application) {
     private var appDatabase: AppDatabase = Room.databaseBuilder(
         application,
         AppDatabase::class.java,
-        Constants.DatabaseConstants.DATABASE_NAME
-    ).build()
+        Constants.DatabaseConstants.DATABASE_NAME,
+    ).fallbackToDestructiveMigration(true)
+        .build()
 
     private var categoriesDao: CategoriesDao = appDatabase.categoriesDao()
+    private var recipesDao: RecipesDao = appDatabase.recipesDao()
 
     private val prefs = FavoritesSharedPreferences
 
@@ -57,7 +60,7 @@ class RecipesRepository(private val application: Application) {
         try {
             val response = recipesApiService.getCategories().execute()
             val result = if (response.isSuccessful) response.body() else null
-            Log.i("!!!", "закончил загрузку категорий. Результат: $result")
+            Log.i("!!!", "закончил загрузку категорий")
             result
         } catch (e: Exception) {
             Log.i("!!!", "закончил загрузку категорий. Результат: null через Exception")
@@ -71,7 +74,7 @@ class RecipesRepository(private val application: Application) {
             try {
                 val response = recipesApiService.getRecipesByCategoryId(categoryId).execute()
                 val result = if (response.isSuccessful) response.body() else null
-                Log.i("!!!", "закончил загрузку рецептов. Результат: $result")
+                Log.i("!!!", "закончил загрузку рецептов")
                 result
             } catch (e: Exception) {
                 Log.i("!!!", "закончил загрузку рецептов. Результат: null через Exception")
@@ -84,7 +87,7 @@ class RecipesRepository(private val application: Application) {
         try {
             val response = recipesApiService.getRecipeByRecipeId(recipeId).execute()
             val result = if (response.isSuccessful) response.body() else null
-            Log.i("!!!", "закончил загрузку рецепта. Результат: $result")
+            Log.i("!!!", "закончил загрузку рецепта")
             result
         } catch (e: Exception) {
             Log.i("!!!", "закончил загрузку рецепта. Результат: null через Exception")
@@ -103,7 +106,7 @@ class RecipesRepository(private val application: Application) {
             try {
                 val response = recipesApiService.getRecipes(favoritesList).execute()
                 val result = if (response.isSuccessful) response.body() else null
-                Log.i("!!!", "закончил загрузку рецептов по ID. Результат: $result")
+                Log.i("!!!", "закончил загрузку рецептов по ID")
                 result
             } catch (e: Exception) {
                 Log.i(
@@ -117,7 +120,15 @@ class RecipesRepository(private val application: Application) {
 
     suspend fun getCategoriesFromCache() = categoriesDao.getAllCategories()
 
-    suspend fun saveToDatabase(categories: List<Category>) =
+    suspend fun saveCategoriesToDatabase(categories: List<Category>) =
         categoriesDao.insertOrReplace(categories)
-}
 
+    suspend fun getRecipesFromCache(categoryId: Int) = recipesDao.getRecipesByCategoryId(categoryId)
+
+    suspend fun saveRecipesToDatabase(categoryId: Int, recipes: List<Recipe>) {
+        val recipesWithCategoryId = recipes.map { recipe ->
+            recipe.copy(categoryId = categoryId)
+        }
+        recipesDao.insertOrReplace(recipesWithCategoryId)
+    }
+}
