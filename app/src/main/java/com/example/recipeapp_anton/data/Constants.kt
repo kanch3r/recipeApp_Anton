@@ -4,6 +4,8 @@ object Constants {
 
     object DatabaseConstants {
         const val DATABASE_NAME = "recipeAppDatabase"
+        const val DATABASE_VERSION = 4
+
     }
 
     object NetworkConstants {

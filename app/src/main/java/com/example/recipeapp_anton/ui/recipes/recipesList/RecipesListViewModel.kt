@@ -1,6 +1,7 @@
 package com.example.recipeapp_anton.ui.recipes.recipesList
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,17 +32,31 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
 
     fun loadRecipesList(category: Category) {
         viewModelScope.launch {
-            val recipes = repository.getRecipesByCategoryId(category.id)
             val categoryName = category.title
             val categoryImageUrl = Constants.ApiConstants.BASE_URL_IMAGES + category.imageUrl
 
-            if (recipes != null) {
+            val cachedRecipes = repository.getRecipesFromCache(category.id)
+            if (cachedRecipes.isNotEmpty()) {
                 _state.value = _state.value?.copy(
-                    recipeList = recipes,
+                    recipeList = cachedRecipes,
                     categoryImageUrl = categoryImageUrl,
                     categoryName = categoryName,
                     errorMessage = null,
                 )
+                Log.i("!!!", "Произошла загрузка рецептов ${category.title} из cache")
+            }
+
+            val recipesFromNet = repository.getRecipesByCategoryId(category.id)
+
+            if (recipesFromNet != null) {
+                _state.value = _state.value?.copy(
+                    recipeList = recipesFromNet,
+                    categoryImageUrl = categoryImageUrl,
+                    categoryName = categoryName,
+                    errorMessage = null,
+                )
+                repository.saveRecipesToDatabase(category.id, recipesFromNet)
+                Log.i("!!!", "Произошла загрузка рецептов ${category.title} из сети")
             } else {
                 _state.value = _state.value?.copy(
                     errorMessage = appContext.getString(R.string.error_loading_data)
