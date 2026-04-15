@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.recipeapp_anton.R
 import com.example.recipeapp_anton.data.RecipesRepository
 import com.example.recipeapp_anton.model.Recipe
 import kotlinx.coroutines.launch
@@ -19,8 +18,6 @@ data class FavoritesUiState(
 
 class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val appContext = application.applicationContext
-
     private val repository = RecipesRepository(application)
 
     private val _state = MutableLiveData(FavoritesUiState())
@@ -29,19 +26,15 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun loadFavoritesRecipesList() {
         viewModelScope.launch {
-            val recipes = repository.getRecipes(appContext)
-            when {
-                recipes == null -> _state.value = _state.value?.copy(
-                    errorMessage = appContext.getString(R.string.error_loading_data)
-                )
-
-                recipes.isEmpty() -> _state.value = _state.value?.copy(
+            val recipes = repository.getFavoriteRecipes()
+            if (recipes.isEmpty()) {
+                _state.value = _state.value?.copy(
                     isFavoriteListEmpty = true,
                     isFavoriteListVisible = false,
                     errorMessage = null
                 )
-
-                else -> _state.value = _state.value?.copy(
+            } else {
+                _state.value = _state.value?.copy(
                     isFavoriteListEmpty = false,
                     isFavoriteListVisible = true,
                     recipeList = recipes,

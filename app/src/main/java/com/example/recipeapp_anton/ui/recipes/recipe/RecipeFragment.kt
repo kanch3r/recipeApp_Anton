@@ -1,7 +1,6 @@
 package com.example.recipeapp_anton.ui.recipes.recipe
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -88,7 +87,7 @@ class RecipeFragment : Fragment() {
     private fun setupObservers() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             setTitleRecipe(state.recipe?.title)
-            setFavoriteIcon(state.isFavorite)
+            setFavoriteIcon(state.recipe?.isFavorite)
             setImageRecipe(state.recipeImageUrl)
             setPortions(state.portions.toString())
             setupRecycleViewDataSet(
@@ -148,7 +147,7 @@ class RecipeFragment : Fragment() {
         )
     }
 
-    private fun setupFavoriteButtonListener(recipeId: Int?) {
+    private fun setupFavoriteButtonListener(recipeId: Int) {
         binding.ibFavoriteIcon.setOnClickListener {
             viewModel.onFavoritesClicked(recipeId)
         }
@@ -171,9 +170,9 @@ class RecipeFragment : Fragment() {
             .into(binding.ivRecipe)
     }
 
-    private fun setFavoriteIcon(isFavorite: Boolean) {
+    private fun setFavoriteIcon(isFavorite: Boolean?) {
         val favIcon =
-            if (isFavorite) R.drawable.ic_heart_filled else R.drawable.ic_heart_filled_transparent
+            if (isFavorite == true) R.drawable.ic_heart_filled else R.drawable.ic_heart_filled_transparent
         binding.ibFavoriteIcon.setImageResource(favIcon)
     }
 

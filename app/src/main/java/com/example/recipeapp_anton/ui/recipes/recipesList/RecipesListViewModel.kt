@@ -57,7 +57,9 @@ class RecipesListViewModel(application: Application) : AndroidViewModel(applicat
                 )
                 repository.saveRecipesToDatabase(category.id, recipesFromNet)
                 Log.i("!!!", "Произошла загрузка рецептов ${category.title} из сети")
-            } else {
+            }
+
+            if (recipesFromNet == null && cachedRecipes.isEmpty()) {
                 _state.value = _state.value?.copy(
                     errorMessage = appContext.getString(R.string.error_loading_data)
                 )
