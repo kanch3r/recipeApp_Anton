@@ -1,7 +1,6 @@
 package com.example.recipeapp_anton.data
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.room.Room
 import com.example.recipeapp_anton.data.database.AppDatabase
@@ -29,8 +28,6 @@ class RecipesRepository(private val application: Application) {
 
     private var categoriesDao: CategoriesDao = appDatabase.categoriesDao()
     private var recipesDao: RecipesDao = appDatabase.recipesDao()
-
-    private val prefs = FavoritesSharedPreferences
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = when (Constants.NetworkConstants.LOG_LEVEL) {
@@ -95,40 +92,46 @@ class RecipesRepository(private val application: Application) {
         }
     }
 
-    suspend fun getRecipes(appContext: Context): List<Recipe>? = withContext(Dispatchers.IO) {
+    suspend fun getFavoriteRecipes(): List<Recipe> = withContext(Dispatchers.IO) {
         Log.i("!!!", "начал загрузку избранного")
-        val favoritesList = prefs.getFavorites(appContext).joinToString(",")
-        Log.i("!!!", "ID в избранном: $favoritesList")
-
-        if (favoritesList.isEmpty()) {
-            emptyList()
-        } else {
-            try {
-                val response = recipesApiService.getRecipes(favoritesList).execute()
-                val result = if (response.isSuccessful) response.body() else null
-                Log.i("!!!", "закончил загрузку рецептов по ID")
-                result
-            } catch (e: Exception) {
-                Log.i(
-                    "!!!",
-                    "закончил загрузку рецептов по ID. Результат: null через Exception"
-                )
-                null
-            }
-        }
+        val favoritesList = recipesDao.getFavoritesRecipes().ifEmpty { emptyList() }
+        Log.i("!!!", "закончил загрузку избранного. Рецептов ${favoritesList.size}")
+        favoritesList
     }
 
-    suspend fun getCategoriesFromCache() = categoriesDao.getAllCategories()
 
-    suspend fun saveCategoriesToDatabase(categories: List<Category>) =
+    suspend fun getCategoriesFromCache() = withContext(Dispatchers.IO) {
+        categoriesDao.getAllCategories()
+    }
+
+    suspend fun saveCategoriesToDatabase(categories: List<Category>) = withContext(Dispatchers.IO) {
         categoriesDao.insertOrReplace(categories)
-
-    suspend fun getRecipesFromCache(categoryId: Int) = recipesDao.getRecipesByCategoryId(categoryId)
-
-    suspend fun saveRecipesToDatabase(categoryId: Int, recipes: List<Recipe>) {
-        val recipesWithCategoryId = recipes.map { recipe ->
-            recipe.copy(categoryId = categoryId)
-        }
-        recipesDao.insertOrReplace(recipesWithCategoryId)
     }
+
+    suspend fun getRecipesFromCache(categoryId: Int) = withContext(Dispatchers.IO) {
+        recipesDao.getRecipesByCategoryId(categoryId)
+    }
+
+    suspend fun saveRecipesToDatabase(categoryId: Int? = null, recipes: List<Recipe>) =
+        withContext(Dispatchers.IO) {
+            val existingFavorites: Map<Int, Recipe> =
+                recipesDao.getFavoritesRecipes().associateBy { it.id }
+
+            val updatedRecipes: List<Recipe> = recipes.map { recipe ->
+                recipe.copy(
+                    categoryId = categoryId ?: recipe.categoryId,
+                    isFavorite = existingFavorites[recipe.id]?.isFavorite ?: false
+                )
+            }
+            recipesDao.insertOrReplace(updatedRecipes)
+        }
+
+    suspend fun getRecipeFromCache(recipeId: Int): Recipe? = withContext(Dispatchers.IO) {
+        recipesDao.getRecipeFromCacheById(recipeId)
+    }
+
+    suspend fun updateFavoriteStatus(recipeId: Int, isFavorite: Boolean) =
+        withContext(Dispatchers.IO) {
+            recipesDao.updateFavoriteStatus(recipeId, isFavorite)
+        }
 }
